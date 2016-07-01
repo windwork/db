@@ -52,26 +52,26 @@ final class DBFactory {
 	 *   ),
 	 * );
 	 * </pre>
-	 * @param string $cfgKey = 'default'
+	 * @param string $connectId = 'default'
 	 * @return \wf\db\IDB
 	 */
-	public static function create(array $cfgs, $cfgKey = 'default') {		
+	public static function create(array $cfgs, $connectId = 'default') {		
 		// 如果该类实例未初始化则创建
-		if(empty(static::$instance[$cfgKey])) {
-			if (!isset($cfgs[$cfgKey])) {
-				throw new Exception("不存在的数据库连接配置组（{$cfgKey}）");
+		if(empty(static::$instance[$connectId])) {
+			if (!isset($cfgs[$connectId])) {
+				throw new Exception("不存在的数据库连接配置组（{$connectId}）");
 			}
 			
-			$cfg = $cfgs[$cfgKey];
+			$cfg = $cfgs[$connectId];
 			
 			// 默认使用 PDOMySQL来操作MySQL
 		    $adapter = empty($cfg["db_adapter"]) ? 'PDOMySQL' : $cfg["db_adapter"];
 		    
 			$class = "\\wf\\db\\adapter\\{$adapter}";
-			static::$instance[$cfgKey] = new $class($cfg);
+			static::$instance[$connectId] = new $class($cfg);
 		}
 		
-		return static::$instance[$cfgKey];
+		return static::$instance[$connectId];
 	}
 }
 
