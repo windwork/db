@@ -20,13 +20,13 @@ use wf\db\QueryHelper;
  * @link        http://www.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
+class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	/**
 	 * 数据库操作对象
 	 * 
-	 * @var \PDO
+	 * @var \mysqli
 	 */
-	private $dbh = null;
+	private $mysqli = null;
 	
 	/**
 	 * 数据库连接
@@ -35,21 +35,18 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * @throws \wf\db\Exception
 	 */
 	public function __construct(array $cfg) {
-		if (!class_exists('\\PDO')) {
-			throw new \wf\db\Exception('连接数据库时出错：你的PHP引擎未启用PDO_MYSQL扩展。');
+		if (!class_exists('\\mysqli')) {
+			throw new \wf\db\Exception('连接数据库时出错：你的PHP引擎未启用mysqli扩展。');
 		}
 	
 		parent::__construct($cfg);
 		
-		try {		
-			$dsn = "mysql:host={$cfg['db_host']};port={$cfg['db_port']};dbname={$cfg['db_name']};charset=utf8";
-			$this->dbh = new \PDO($dsn, $cfg['db_user'], $cfg['db_pass']);
-		} catch (\PDOException $e) {
-			throw new \wf\db\Exception('连接数据库时出错：'.$e->getMessage());
+		if(!$this->mysqli = new \mysqli($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], $cfg['db_port'], @$cfg['db__socket'])) {
+			throw new \wf\db\Exception('连接数据库时出错：'.$this->mysqli->error);
 		}
-		
-		$this->dbh->exec("sql_mode=''");
-		$this->dbh->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+
+		$this->mysqli->set_charset("utf8");
+		$this->mysqli->query("sql_mode=''");
 	}
 	
 	/**
@@ -58,7 +55,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 */
 	public function beginTransaction() {
 		if (!$this->transactions) {
-			$this->dbh->beginTransaction();
+			$this->mysqli->begin_transaction();
 		}
 
 		++$this->transactions;
@@ -72,7 +69,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	public function commit() {
 		--$this->transactions;
 	
-		if($this->transactions == 0 && false === $this->dbh->commit()) {
+		if($this->transactions == 0 && false === $this->mysqli->commit()) {
 		    throw new \wf\db\Exception($this->getLastErr());
 		}
 	}
@@ -82,7 +79,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * @see DB::lastInsertId()
 	 */
 	public function lastInsertId() {
-		return $this->dbh->lastInsertId();
+		return $this->mysqli->insert_id;
 	}
 	
 	/**
@@ -91,19 +88,21 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * @param String $sql
 	 * @param array $args
 	 * @throws \wf\db\Exception
-	 * @return \wf\Object
+	 * @return \mysqli_result
 	 */
 	public function query($sql, array $args = array()) {
 		if ($args) {
 			$sql = QueryHelper::format($sql, $args);
 		}
+		
 		$sql = QueryHelper::tablePrefix($sql, $this->cfg['db_table_prefix']);
 							
 		// 记录数据库查询次数
 		$this->execTimes ++;
 		$this->log[] = $sql;
 		
-		$query = $this->dbh->query($sql);		
+		$query = $this->mysqli->query($sql);
+		
         if(false === $query) {
         	$this->log[] = $this->getLastErr();
         	throw new \wf\db\Exception($this->getLastErr());
@@ -121,24 +120,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * @return bool 
 	 */
 	public function exec($sql, array $args = array()) {
-		if ($args) {
-			$sql = QueryHelper::format($sql, $args);
-		}
-		
-	    $sql = QueryHelper::tablePrefix($sql, $this->cfg['db_table_prefix']);	
-							
-		// 记录数据库查询次数
-		$this->execTimes ++;
-		$this->log[] = $sql;
-		
-		$result = $this->dbh->exec($sql);
-
-		if(false === $result) {
-		    $this->log[] = $this->getLastErr();
-			throw new \wf\db\Exception($this->getLastErr());
-		}
-		    	    	    	
-		return $result;
+		return (bool)$this->query($sql, $args);
 	}
 	
 	/**
@@ -146,13 +128,15 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * @see DB::getAll()
 	 */
 	public function getAll($sql, array $args = array(), $allowCache = false) {
-		$query = $this->query($sql, $args);
-		if (!$query) {
+		$result = $this->query($sql, $args);
+		
+		if (!$result) {
 			return  array();
 		}
+
+		$rows = $result->fetch_all(MYSQLI_ASSOC);
 		
-		$rs = $query->fetchAll(\PDO::FETCH_ASSOC);
-		return $rs;
+		return $rows;
 	}
 	
 	/**
@@ -160,13 +144,15 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * @see DB::getRow()
 	 */
 	public function getRow($sql, array $args = array(), $allowCache = false) {
-		$query = $this->query($sql, $args);
-		if (!$query) {
+		$result = $this->query($sql, $args);
+		
+		if (!$result) {
 			return  array();
 		}
 		
-		$rs = $query->fetch(\PDO::FETCH_ASSOC);
-		return $rs;
+		$row = $result->fetch_row();
+		
+		return $row;
 	}
 	
 	/**
@@ -174,13 +160,15 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * @see DB::getOne()
 	 */
 	public function getOne($sql, array $args = array(), $allowCache = false) {
-		$query = $this->query($sql, $args);
-		if (!$query) {
+		$result = $this->query($sql, $args);
+		
+		if (!$result) {
 			return  null;
 		}
 		
-		$rs = $query->fetchColumn();
-		return $rs;
+		$row = $result->fetch_row();
+		
+		return $row[0];
 	}
 	
 	/**
@@ -188,7 +176,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * @see \wf\Object::getLastErr()
 	 */
 	public function getLastErr() {
-		return implode(' ', $this->dbh->errorInfo());
+		return implode(' ', $this->mysqli->error_list);
 	}
 		
 	/**
@@ -197,7 +185,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * @return \wf\db\IDB
 	 */
 	public function setAutoCommit($isAutoCommit = false) {
-		$this->dbh->setAttribute(\PDO::ATTR_AUTOCOMMIT, $isAutoCommit);
+		$this->mysqli->autocommit($isAutoCommit);
 		
 		return $this;
 	}
@@ -206,7 +194,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 		--$this->transactions;
 			
 		if ($this->transactions <= 0) {
-			$this->dbh->rollback();
+			$this->mysqli->rollback();
 		} else {			
 			throw new \wf\db\Exception($this->getLastErr());
 		}
