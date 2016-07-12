@@ -89,7 +89,7 @@ interface IDB {
 	public function commit();
 		
 	/**
-	 * 针对没有结果集合返回的操作
+	 * 针对没有结果集合返回的写入操作
 	 * 比如INSERT、UPDATE、DELETE等操作，它返回的结果是当前操作影响的列数。
 	 * 当增删改SQL中有变量时使用，如果SQL中有变量，请使用prepare()，
 	 * 
@@ -108,7 +108,7 @@ interface IDB {
 	public function lastInsertId();
 		
 	/**
-	 * 执行SQL查询语句
+	 * 执行SQL查询语句，一般用于只读查询
 	 * 
 	 * <pre>
 	 * useage:

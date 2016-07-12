@@ -1,5 +1,5 @@
 <?php
-require_once 'QueryHelper.php';
+require_once '../QueryHelper.php';
 
 use \wf\db\QueryHelper;
 

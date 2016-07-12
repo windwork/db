@@ -9,7 +9,7 @@
  */
 namespace wf\db\adapter;
 
-use wf\db\QueryHelper;
+use \wf\db\QueryHelper;
 
 /**
  * 使用 PDO扩展对MySQL数据库进行操作
@@ -86,12 +86,12 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * 简单查询
+	 * 执行SQL查询
 	 *
 	 * @param String $sql
 	 * @param array $args
 	 * @throws \wf\db\Exception
-	 * @return \wf\Object
+	 * @return \wf\core\Object
 	 */
 	public function query($sql, array $args = array()) {
 		if ($args) {
@@ -185,7 +185,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	
 	/**
 	 * (non-PHPdoc)
-	 * @see \wf\Object::getLastErr()
+	 * @see \wf\core\Object::getLastErr()
 	 */
 	public function getLastErr() {
 		return implode(' ', $this->dbh->errorInfo());

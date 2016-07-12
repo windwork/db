@@ -83,7 +83,7 @@ abstract class ADB {
 		
 		$cacheObj = null;
 		if (function_exists('cache')) {
-			$cacheObj = cache();
+			$cacheObj = \cache();
 		}
 		
 		$cacheObj && empty($tableInfoList) && $tableInfoList = $cacheObj->read('db/tableInfoList');

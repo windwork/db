@@ -6,7 +6,7 @@ if (PHP_SAPI != 'cli') {
 require_once __DIR__ . '/../IDB.php';
 require_once __DIR__ . '/../ADB.php';
 require_once __DIR__ . '/../Exception.php';
-require_once __DIR__ . '/../SQLBuilder.php';
+require_once __DIR__ . '/../QueryHelper.php';
 require_once __DIR__ . '/../DBFactory.php';
 require_once __DIR__ . '/../adapter/PDOMySQL.php';
 
@@ -52,8 +52,7 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase {
 			),
 		);
 
-		DBFactory::setCfg($cfg);
-		$this->pDOMySQL = \wf\db\DBFactory::create();
+		$this->pDOMySQL = \wf\db\DBFactory::create($cfg);
 		
 		// 创建测试表
 		$sql = "CREATE TABLE IF NOT EXISTS `wk_test_table` (

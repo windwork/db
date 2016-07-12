@@ -9,7 +9,8 @@
  */
 namespace wf\db\adapter;
 
-use wf\db\QueryHelper;
+use \wf\db\QueryHelper;
+
 
 /**
  * 使用 PDO扩展对MySQL数据库进行操作
@@ -83,7 +84,7 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * 简单查询
+	 * 执行SQL查询，执行读取查询
 	 *
 	 * @param String $sql
 	 * @param array $args
@@ -112,7 +113,7 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * 执行SQL、针对没有结果集合返回的操作，比如INSERT、UPDATE、DELETE等操作，它返回的结果是当前操作影响的列数。
+	 * 执行SQL，针对没有结果集合返回的操作，比如INSERT、UPDATE、DELETE等写入操作，它返回的结果是当前操作影响的列数。
 	 * 
 	 * @param string $sql
 	 * @param array $args
@@ -173,7 +174,7 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	
 	/**
 	 * (non-PHPdoc)
-	 * @see \wf\Object::getLastErr()
+	 * @see \wf\core\Object::getLastErr()
 	 */
 	public function getLastErr() {
 		return implode(' ', $this->mysqli->error_list);

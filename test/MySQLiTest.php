@@ -6,9 +6,9 @@ if (PHP_SAPI != 'cli') {
 require_once __DIR__ . '/../IDB.php';
 require_once __DIR__ . '/../ADB.php';
 require_once __DIR__ . '/../Exception.php';
-require_once __DIR__ . '/../SQLBuilder.php';
+require_once __DIR__ . '/../QueryHelper.php';
 require_once __DIR__ . '/../DBFactory.php';
-require_once __DIR__ . '/../adapter/MySQL.php';
+require_once __DIR__ . '/../adapter/MySQLi.php';
 
 use \wf\db\DBFactory;
 use \wf\db\adapter\MySQL;
@@ -22,7 +22,7 @@ class MySQLTest extends PHPUnit_Framework_TestCase {
 	 * 
 	 * @var \wf\db\IDB
 	 */
-	private $mySQL;
+	private $mySQLi;
 	
 	/**
 	 * Prepares the environment before running a test.
@@ -33,7 +33,7 @@ class MySQLTest extends PHPUnit_Framework_TestCase {
 		$cfg = array(
 			// 
 			'default' => array(
-				'db_adapter'       => 'MySQL',
+				'db_adapter'       => 'MySQLi',
 				'db_host'          => '127.0.0.1',  // 本机测试
 				'db_port'          => '3306',       // 数据库服务器端口
 				'db_name'          => 'test',       // 数据库名
@@ -44,7 +44,7 @@ class MySQLTest extends PHPUnit_Framework_TestCase {
 			),
 			// 可主从分离
 			'slave' => array(
-				'db_adapter'       => 'MySQL',
+				'db_adapter'       => 'MySQLi',
 				'db_host'          => '127.0.0.1',  // 本机测试
 				'db_port'          => '3306',       // 数据库服务器端口
 				'db_name'          => 'test',       // 数据库名
@@ -55,8 +55,7 @@ class MySQLTest extends PHPUnit_Framework_TestCase {
 			),
 		);
 
-		DBFactory::setCfg($cfg);
-		$this->mySQL = \wf\db\DBFactory::create();
+		$this->mySQLi = \wf\db\DBFactory::create($cfg);
 		
 		// 创建测试表
 		$sql = "CREATE TABLE IF NOT EXISTS `wk_test_table` (
@@ -64,7 +63,7 @@ class MySQLTest extends PHPUnit_Framework_TestCase {
 				  `str`  varchar(255) NOT NULL DEFAULT '' ,
 				  PRIMARY KEY (`id`)
 				) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;";
-		$this->mySQL->query($sql);
+		$this->mySQLi->query($sql);
 	}
 	
 	/**
@@ -73,7 +72,7 @@ class MySQLTest extends PHPUnit_Framework_TestCase {
 	protected function tearDown() {
 		parent::tearDown ();
 		$sql = "DROP TABLE IF EXISTS wk_test_table";
-		$this->mySQL->query($sql);
+		$this->mySQLi->query($sql);
 	}
 	
 	/**
@@ -86,113 +85,113 @@ class MySQLTest extends PHPUnit_Framework_TestCase {
 	private function insertRow($val = '') {
 		$val = $val ? $val : date('Y-m-d H:i:s');
 		$sql = "INSERT INTO wk_test_table (str) VALUE ('{$val}')";
-		$this->mySQL->query($sql);
+		$this->mySQLi->query($sql);
 	}
 	
 	/**
-	 * Tests mySQL->lastInsertId()
+	 * Tests mySQLi->lastInsertId()
 	 */
 	public function testLastInsertId() {
 		$this->insertRow();
-		$lastInsertId = $this->mySQL->lastInsertId();
+		$lastInsertId = $this->mySQLi->lastInsertId();
 		
 		$this->assertNotEmpty($lastInsertId);
 	}
 	
 	/**
-	 * Tests mySQL->query()
+	 * Tests mySQLi->query()
 	 */
 	public function testQuery() {
-		// TODO Auto-generated mySQLTest->testQuery()
+		// TODO Auto-generated mySQLiTest->testQuery()
 		$this->markTestIncomplete ( "query test not implemented" );
 		
-		$this->mySQL->query(/* parameters */);
+		$this->mySQLi->query(/* parameters */);
 	}
 	
 	/**
-	 * Tests mySQL->exec()
+	 * Tests mySQLi->exec()
 	 */
 	public function testExec() {
-		// TODO Auto-generated mySQLTest->testExec()
+		// TODO Auto-generated mySQLiTest->testExec()
 		$this->markTestIncomplete ( "exec test not implemented" );
 		
-		$this->mySQL->exec(/* parameters */);
+		$this->mySQLi->exec(/* parameters */);
 	}
 	
 	/**
-	 * Tests mySQL->getAll()
+	 * Tests mySQLi->getAll()
 	 */
 	public function testGetAll() {
 		$this->insertRow();
 		$this->insertRow();
-		$rows = $this->mySQL->getAll("SELECT * FROM wk_test_table LIMIT 2");
+		$rows = $this->mySQLi->getAll("SELECT * FROM wk_test_table LIMIT 2");
 		
 		$this->assertEquals(2, count($rows));
 	}
 	
 	/**
-	 * Tests mySQL->getRow()
+	 * Tests mySQLi->getRow()
 	 */
 	public function testGetRow() {
 		$uniqe = uniqid();
 		$this->insertRow($uniqe);
 		
-		$row = $this->mySQL->getRow("SELECT * FROM wk_test_table WHERE str = '{$uniqe}'");
+		$row = $this->mySQLi->getRow("SELECT * FROM wk_test_table WHERE str = '{$uniqe}'");
 		$this->assertNotEmpty($row);
 	}
 	
 	/**
-	 * Tests mySQL->getOne()
+	 * Tests mySQLi->getOne()
 	 */
 	public function testGetOne() {
 		$uniqe = uniqid();
 		$this->insertRow($uniqe);
 		
-		$str = $this->mySQL->getRow("SELECT str FROM wk_test_table WHERE str = '{$uniqe}'");
+		$str = $this->mySQLi->getRow("SELECT str FROM wk_test_table WHERE str = '{$uniqe}'");
 		$this->assertNotEmpty($str);
 	}
 	
 	/**
-	 * Tests mySQL->getLastErr()
+	 * Tests mySQLi->getLastErr()
 	 */
 	public function testGetLastErr() {
 		$sql = "SELECT x from tb_" . uniqid();
 		try {
-		    $this->mySQL->query($sql);
+		    $this->mySQLi->query($sql);
 		} catch (\wf\db\Exception $e) {
-			$lastErr = $this->mySQL->getLastErr();
+			$lastErr = $this->mySQLi->getLastErr();
 		}
 		
 		$this->assertEquals($lastErr, $e->getMessage());
 	}
 	
 	/**
-	 * Tests mySQL->setAutoCommit()
+	 * Tests mySQLi->setAutoCommit()
 	 */
 	public function testSetAutoCommit() {
-		// TODO Auto-generated mySQLTest->testSetAutoCommit()
+		// TODO Auto-generated mySQLiTest->testSetAutoCommit()
 		$this->markTestIncomplete ( "setAutoCommit test not implemented" );
 		
-		$this->mySQL->setAutoCommit(/* parameters */);
+		$this->mySQLi->setAutoCommit(/* parameters */);
 	}
 	
 	/**
-	 * Tests mySQL->rollBack()
+	 * Tests mySQLi->rollBack()
 	 */
 	public function testRollBack() {
 		$uniqe = uniqid();
 		$this->insertRow($uniqe);
 		
 		try {
-			$this->mySQL->beginTransaction();
+			$this->mySQLi->beginTransaction();
 			$this->insertRow();
 			$this->insertRow();
 			throw new \wf\db\Exception('~');
 		} catch (\wf\db\Exception $e) {
-			$this->mySQL->rollBack();
+			$this->mySQLi->rollBack();
 		}
 		
-		$lastStr = $this->mySQL->getOne("SELECT str FROM wk_test_table ORDER BY id DESC");
+		$lastStr = $this->mySQLi->getOne("SELECT str FROM wk_test_table ORDER BY id DESC");
 		$this->assertEquals($uniqe, $lastStr);
 	}
 }
