@@ -89,7 +89,6 @@ abstract class ADB {
 		$cacheObj && empty($tableInfoList) && $tableInfoList = $cacheObj->read('db/tableInfoList');
 
 		if((!$tableInfoList || empty($tableInfoList[$table]))) {
-			//"SHOW FULL COLUMNS FROM {$table}"
 			$rows = $this->getAll("SHOW COLUMNS FROM {$table}");
 			$tableInfo = array(
 				'pk'      => '', 
