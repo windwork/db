@@ -141,7 +141,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * {@inheritDoc}
 	 * @see \wf\db\IDB::getAll()
 	 */
-	public function getAll($sql, array $args = array(), $allowCache = false) {
+	public function getAll($sql, array $args = array()) {
 		$query = $this->query($sql, $args);
 		if (!$query) {
 			return  array();
@@ -156,7 +156,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * {@inheritDoc}
 	 * @see \wf\db\IDB::getRow()
 	 */
-	public function getRow($sql, array $args = array(), $allowCache = false) {
+	public function getRow($sql, array $args = array()) {
 		$query = $this->query($sql, $args);
 		if (!$query) {
 			return  array();
@@ -171,7 +171,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	 * {@inheritDoc}
 	 * @see \wf\db\IDB::getColumn()
 	 */
-	public function getColumn($sql, array $args = array(), $allowCache = false) {
+	public function getColumn($sql, array $args = array()) {
 		$query = $this->query($sql, $args);
 		if (!$query) {
 			return  null;

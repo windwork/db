@@ -12,27 +12,24 @@ Windwork MySQL数据库访问组件
 	 * 
 	 * @param string $sql
 	 * @param array $args = [] sql格式化参数值列表
-	 * @param bool $allowCache
 	 */
-	public function getAll($sql, array $args = [], $allowCache = false);
+	public function getAll($sql, array $args = []);
 	
 	/**
 	 * 获取第一列
 	 * 
 	 * @param string $sql
 	 * @param array $args = []  sql格式化参数值列表
-	 * @param bool $allowCache
 	 */
-	public function getRow($sql, array $args = [], $allowCache = false);
+	public function getRow($sql, array $args = []);
 			
 	/**
 	 * 获取第一列第一个字段
 	 * 
 	 * @param string $sql
 	 * @param array $args =[]  sql格式化参数值列表
-	 * @param bool $allowCache
 	 */
-	public function getColumn($sql, array $args = [], $allowCache = false);
+	public function getColumn($sql, array $args = []);
 
 	/**
 	 * 执行写入SQL

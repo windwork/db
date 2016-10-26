@@ -128,7 +128,7 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	 * (non-PHPdoc)
 	 * @see DB::getAll()
 	 */
-	public function getAll($sql, array $args = array(), $allowCache = false) {
+	public function getAll($sql, array $args = array()) {
 		$result = $this->query($sql, $args);
 		
 		if (!$result) {
@@ -144,7 +144,7 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	 * (non-PHPdoc)
 	 * @see DB::getRow()
 	 */
-	public function getRow($sql, array $args = array(), $allowCache = false) {
+	public function getRow($sql, array $args = array()) {
 		$result = $this->query($sql, $args);
 		
 		if (!$result) {
@@ -160,7 +160,7 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	 * (non-PHPdoc)
 	 * @see DB::getColumn()
 	 */
-	public function getColumn($sql, array $args = array(), $allowCache = false) {
+	public function getColumn($sql, array $args = array()) {
 		$result = $this->query($sql, $args);
 		
 		if (!$result) {

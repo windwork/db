@@ -35,28 +35,14 @@ abstract class ADB {
 	 * @var array
 	 */
 	protected $log = array();
-	
-	/**
-	 * 
-	 * @var \wf\cache\ICache
-	 */
-	protected $cache = null;
-		
+			
 	/**
 	 * 数据库当前页面连接次数,每次实行SQL语句的时候 ++
 	 * 
 	 * @var int
 	 */
 	public $execTimes = 0;
-	
-	/**
-	 * 设置缓存对象
-	 * @param \wf\cache\ICache $cache
-	 */
-	public function setCache(\wf\cache\ICache $cache) {
-		$this->cache = $cache;
-	}
-	
+		
 	/**
 	 * 获取模型数据表信息
 	 * 
@@ -88,11 +74,7 @@ abstract class ADB {
 	 */
 	public function getTableSchema($table) {
 		static $tableSchemaList = array();
-				
-		if ($this->cache && empty($tableSchemaList)) {
-		    $tableSchemaList = $this->cache->read('db/tableSchemaList');
-		}
-
+		
 		if((!$tableSchemaList || empty($tableSchemaList[$table]))) {
 			$rows = $this->getAll("SHOW COLUMNS FROM {$table}");
 			$tableSchema = array(
@@ -114,11 +96,7 @@ abstract class ADB {
 				}
 			}
 			
-			$tableSchemaList[$table] = $tableSchema;
-			
-			if ($this->cache) {
-				$this->cache->write('db/tableSchemaList', $tableSchemaList);
-			}
+			$tableSchemaList[$table] = $tableSchema;			
 		}
 		
 		return $tableSchemaList[$table];
@@ -166,10 +144,6 @@ abstract class ADB {
 	 */
 	public function __construct(array $cfg) {
 		$this->cfg = $cfg;
-		
-		if (function_exists('cache')) {
-			$this->cache = \cache();
-		}
 	}
 }
 

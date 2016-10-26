@@ -132,27 +132,24 @@ interface IDB {
 	 * 
 	 * @param string $sql
 	 * @param array $args = []  sql格式化参数值列表
-	 * @param bool $allowCache = false
 	 */
-	public function getColumn($sql, array $args = [], $allowCache = false);
+	public function getColumn($sql, array $args = []);
 	
 	/**
 	 * 获取所有记录
 	 * 
 	 * @param string $sql
 	 * @param array $args = []  sql格式化参数值列表
-	 * @param bool $allowCache = false
 	 */
-	public function getAll($sql, array $args = [], $allowCache = false);
+	public function getAll($sql, array $args = []);
 	
 	/**
 	 * 获取第一列
 	 * 
 	 * @param string $sql
 	 * @param array $args = []  sql格式化参数值列表
-	 * @param bool $allowCache = false
 	 */
-	public function getRow($sql, array $args = [], $allowCache = false);
+	public function getRow($sql, array $args = []);
 
 	/**
 	 * 插入多行数据
