@@ -29,14 +29,12 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	private $dbh = null;
 	
 	/**
-	 * 数据库连接
-	 *
 	 * @param array $cfg
 	 * @throws \wf\db\Exception
 	 */
 	public function __construct(array $cfg) {
 		if (!class_exists('\\PDO')) {
-			throw new \wf\db\Exception('连接数据库时出错：你的PHP引擎未启用PDO_MYSQL扩展。');
+			throw new \wf\db\Exception('error on connect to database：你的PHP引擎未启用PDO_MYSQL扩展。');
 		}
 	
 		parent::__construct($cfg);
@@ -45,7 +43,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 			$dsn = "mysql:host={$cfg['db_host']};port={$cfg['db_port']};dbname={$cfg['db_name']};charset=utf8";
 			$this->dbh = new \PDO($dsn, $cfg['db_user'], $cfg['db_pass']);
 		} catch (\PDOException $e) {
-			throw new \wf\db\Exception('连接数据库时出错：'.$e->getMessage());
+			throw new \wf\db\Exception('error on connect to database：'.$e->getMessage());
 		}
 		
 		$this->dbh->exec("sql_mode=''");
@@ -53,8 +51,9 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see DB::beginTransaction()
+	 * 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::beginTransaction()
 	 */
 	public function beginTransaction() {
 		if (!$this->transactions) {
@@ -66,32 +65,31 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see DB::commit()
+	 * 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::commit()
 	 */
 	public function commit() {
 		--$this->transactions;
 	
 		if($this->transactions == 0 && false === $this->dbh->commit()) {
-		    throw new \wf\db\Exception($this->getLastErr());
+		    throw new \wf\db\Exception('transaction commit error: ' . $this->getLastErr());
 		}
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see DB::lastInsertId()
+	 * 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::lastInsertId()
 	 */
 	public function lastInsertId() {
 		return $this->dbh->lastInsertId();
 	}
 	
 	/**
-	 * 执行SQL查询
-	 *
-	 * @param String $sql
-	 * @param array $args
-	 * @throws \wf\db\Exception
-	 * @return \wf\core\Object
+	 * 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::query()
 	 */
 	public function query($sql, array $args = array()) {
 		if ($args) {
@@ -113,12 +111,9 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * 执行SQL、针对没有结果集合返回的操作，比如INSERT、UPDATE、DELETE等操作，它返回的结果是当前操作影响的列数。
 	 * 
-	 * @param string $sql
-	 * @param array $args
-	 * @throws \wf\db\Exception
-	 * @return bool 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::exec()
 	 */
 	public function exec($sql, array $args = array()) {
 		if ($args) {
@@ -142,8 +137,9 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see DB::getAll()
+	 * 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::getAll()
 	 */
 	public function getAll($sql, array $args = array(), $allowCache = false) {
 		$query = $this->query($sql, $args);
@@ -156,8 +152,9 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see DB::getRow()
+	 * 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::getRow()
 	 */
 	public function getRow($sql, array $args = array(), $allowCache = false) {
 		$query = $this->query($sql, $args);
@@ -170,10 +167,11 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see DB::getOne()
+	 * 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::getColumn()
 	 */
-	public function getOne($sql, array $args = array(), $allowCache = false) {
+	public function getColumn($sql, array $args = array(), $allowCache = false) {
 		$query = $this->query($sql, $args);
 		if (!$query) {
 			return  null;
@@ -184,17 +182,18 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see \wf\core\Object::getLastErr()
+	 * 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::getLastErr()
 	 */
 	public function getLastErr() {
 		return implode(' ', $this->dbh->errorInfo());
 	}
 		
 	/**
-	 * 设置是否自动提交事务，启用事务的时候有效
 	 * 
-	 * @return \wf\db\IDB
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::setAutoCommit()
 	 */
 	public function setAutoCommit($isAutoCommit = false) {
 		$this->dbh->setAttribute(\PDO::ATTR_AUTOCOMMIT, $isAutoCommit);
@@ -202,13 +201,16 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
 		return $this;
 	}
 	
+	/**
+	 * 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::rollBack()
+	 */
 	public function rollBack() {
 		--$this->transactions;
-			
-		if ($this->transactions <= 0) {
-			$this->dbh->rollback();
-		} else {			
-			throw new \wf\db\Exception($this->getLastErr());
+		
+		if ($this->transactions <= 0 && false === $this->dbh->rollback()) {
+			throw new \wf\db\Exception('transaction rollback error: ' . $this->getLastErr());
 		}
 	}
 }

@@ -37,13 +37,13 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	 */
 	public function __construct(array $cfg) {
 		if (!class_exists('\\mysqli')) {
-			throw new \wf\db\Exception('连接数据库时出错：你的PHP引擎未启用mysqli扩展。');
+			throw new \wf\db\Exception('error on connect to database：你的PHP引擎未启用mysqli扩展。');
 		}
 	
 		parent::__construct($cfg);
 		
 		if(!$this->mysqli = new \mysqli($cfg['db_host'], $cfg['db_user'], $cfg['db_pass'], $cfg['db_name'], $cfg['db_port'], @$cfg['db__socket'])) {
-			throw new \wf\db\Exception('连接数据库时出错：'.$this->mysqli->error);
+			throw new \wf\db\Exception('error on connect to database：'.$this->mysqli->error);
 		}
 
 		$this->mysqli->set_charset("utf8");
@@ -71,7 +71,7 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 		--$this->transactions;
 	
 		if($this->transactions == 0 && false === $this->mysqli->commit()) {
-		    throw new \wf\db\Exception($this->getLastErr());
+		    throw new \wf\db\Exception('transaction commit error: ' . $this->getLastErr());
 		}
 	}
 	
@@ -158,9 +158,9 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	
 	/**
 	 * (non-PHPdoc)
-	 * @see DB::getOne()
+	 * @see DB::getColumn()
 	 */
-	public function getOne($sql, array $args = array(), $allowCache = false) {
+	public function getColumn($sql, array $args = array(), $allowCache = false) {
 		$result = $this->query($sql, $args);
 		
 		if (!$result) {
@@ -194,10 +194,8 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	public function rollBack() {
 		--$this->transactions;
 			
-		if ($this->transactions <= 0) {
-			$this->mysqli->rollback();
-		} else {			
-			throw new \wf\db\Exception($this->getLastErr());
+		if ($this->transactions <= 0 && false === $this->mysqli->rollback()) {				
+			throw new \wf\db\Exception('transaction rollback error: '.$this->getLastErr());
 		}
 	}
 }

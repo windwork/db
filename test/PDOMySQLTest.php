@@ -62,7 +62,7 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase {
 				) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;";
 		$this->pDOMySQL->query($sql);
 		
-		$tableInfo = $this->pDOMySQL->getTableInfo('wk_test_table');
+		$tableInfo = $this->pDOMySQL->getTableSchema('wk_test_table');
 		print_r($tableInfo);
 	}
 	
@@ -141,9 +141,9 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * Tests PDOMySQL->getOne()
+	 * Tests PDOMySQL->getColumn()
 	 */
-	public function testGetOne() {
+	public function testGetColumn() {
 		$uniqe = uniqid();
 		$this->insertRow($uniqe);
 		
@@ -191,7 +191,7 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase {
 			$this->pDOMySQL->rollBack();
 		}
 		
-		$lastStr = $this->pDOMySQL->getOne("SELECT str FROM wk_test_table ORDER BY id DESC");
+		$lastStr = $this->pDOMySQL->getColumn("SELECT str FROM wk_test_table ORDER BY id DESC");
 		$this->assertEquals($uniqe, $lastStr);
 	}
 }

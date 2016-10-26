@@ -32,23 +32,25 @@ final class DBFactory {
 	 * $cfg = array(
 	 *   // 
 	 *   'default' => array(
-	 *     'db_host'                 => '127.0.0.1',        // 本机测试
-	 *     'db_port'                 => '3306',             // 数据库服务器端口
-	 *     'db_name'                 => 'windworkdb',   // 数据库名
-	 *     'db_user'                 => 'root',             // 数据库连接用户名
-	 *     'db_pass'                 => '123456',           // 数据库连接密码
-	 *     'db_table_prefix'         => 'wk_',              // 表前缀
-	 *     'db_debug'                => 0,
+	 *     'db_host'            => '127.0.0.1',        // 本机测试
+	 *     'db_port'            => '3306',             // 数据库服务器端口
+	 *     'db_name'            => 'windworkdb',       // 数据库名
+	 *     'db_user'            => 'root',             // 数据库连接用户名
+	 *     'db_pass'            => '123456',           // 数据库连接密码
+	 *     'db_table_prefix'    => 'wk_',              // 表前缀
+	 *     'db_debug'           => 0,
+	 *     'db_adapter'         => 'PDOMySQL',         // MySQLi|PDOMySQL
 	 *   ),
-	 *   // 可主从分离
+	 *   // 第二个数据库连接
 	 *   'slave' => array(
-	 *     'db_host'                 => '127.0.0.1',        // 本机测试
-	 *     'db_port'                 => '3306',             // 数据库服务器端口
-	 *     'db_name'                 => 'windworkdb',   // 数据库名
-	 *     'db_user'                 => 'root',             // 数据库连接用户名
-	 *     'db_pass'                 => '123456',           // 数据库连接密码
-	 *     'db_table_prefix'         => 'wk_',              // 表前缀
-	 *     'db_debug'                => 0,
+	 *     'db_host'            => '127.0.0.1',        // 本机测试
+	 *     'db_port'            => '3306',             // 数据库服务器端口
+	 *     'db_name'            => 'windworkdb',       // 数据库名
+	 *     'db_user'            => 'root',             // 数据库连接用户名
+	 *     'db_pass'            => '123456',           // 数据库连接密码
+	 *     'db_table_prefix'    => 'wk_',              // 表前缀
+	 *     'db_debug'           => 0,
+	 *     'db_adapter'         => 'PDOMySQL',         // MySQLi|PDOMySQL
 	 *   ),
 	 * );
 	 * </pre>

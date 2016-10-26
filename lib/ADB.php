@@ -17,13 +17,7 @@ namespace wf\db;
  * @link        http://www.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-abstract class ADB {
-	/**
-	 * 是否启用调试模式
-	 * @var bool
-	 */
-	public $debug = false;
-	
+abstract class ADB {	
 	/**
 	 * 数据库连接配置
 	 * @var array
@@ -41,6 +35,12 @@ abstract class ADB {
 	 * @var array
 	 */
 	protected $log = array();
+	
+	/**
+	 * 
+	 * @var \wf\cache\ICache
+	 */
+	protected $cache = null;
 		
 	/**
 	 * 数据库当前页面连接次数,每次实行SQL语句的时候 ++
@@ -48,6 +48,14 @@ abstract class ADB {
 	 * @var int
 	 */
 	public $execTimes = 0;
+	
+	/**
+	 * 设置缓存对象
+	 * @param \wf\cache\ICache $cache
+	 */
+	public function setCache(\wf\cache\ICache $cache) {
+		$this->cache = $cache;
+	}
 	
 	/**
 	 * 获取模型数据表信息
@@ -78,42 +86,42 @@ abstract class ADB {
 	 * @param string $table  表名
 	 * @return array
 	 */
-	public function getTableInfo($table) {
-		static $tableInfoList = array();
-		
-		$cacheObj = null;
-		if (function_exists('cache')) {
-			$cacheObj = \cache();
+	public function getTableSchema($table) {
+		static $tableSchemaList = array();
+				
+		if ($this->cache && empty($tableSchemaList)) {
+		    $tableSchemaList = $this->cache->read('db/tableSchemaList');
 		}
-		
-		$cacheObj && empty($tableInfoList) && $tableInfoList = $cacheObj->read('db/tableInfoList');
 
-		if((!$tableInfoList || empty($tableInfoList[$table]))) {
+		if((!$tableSchemaList || empty($tableSchemaList[$table]))) {
 			$rows = $this->getAll("SHOW COLUMNS FROM {$table}");
-			$tableInfo = array(
+			$tableSchema = array(
 				'pk'      => '', 
 				'ai'      => false, 
 				'fields'  => array()
 			);
 			foreach ($rows as $row) {
-				$tableInfo['fields'][strtolower($row['Field'])] = $row;
+				$tableSchema['fields'][strtolower($row['Field'])] = $row;
 				
 				if ($row['Key'] == 'PRI') {
-					if($tableInfo['pk']) {
-						$tableInfo['pk'] = (array)$tableInfo['pk'];
-						$tableInfo['pk'][] = strtolower($row['Field']);
+					if($tableSchema['pk']) {
+						$tableSchema['pk'] = (array)$tableSchema['pk'];
+						$tableSchema['pk'][] = strtolower($row['Field']);
 					} else {
-						$tableInfo['ai'] = $row['Extra'] == 'auto_increment';
-						$tableInfo['pk'] = strtolower($row['Field']);
+						$tableSchema['ai'] = $row['Extra'] == 'auto_increment';
+						$tableSchema['pk'] = strtolower($row['Field']);
 					}
 				}
 			}
 			
-			$tableInfoList[$table] = $tableInfo;
-			$cacheObj && $cacheObj->write('db/tableInfoList', $tableInfoList);
+			$tableSchemaList[$table] = $tableSchema;
+			
+			if ($this->cache) {
+				$this->cache->write('db/tableSchemaList', $tableSchemaList);
+			}
 		}
 		
-		return $tableInfoList[$table];
+		return $tableSchemaList[$table];
 	}
 
 	/**
@@ -158,7 +166,10 @@ abstract class ADB {
 	 */
 	public function __construct(array $cfg) {
 		$this->cfg = $cfg;
-		$this->debug = $cfg['db_debug'];
+		
+		if (function_exists('cache')) {
+			$this->cache = \cache();
+		}
 	}
 }
 

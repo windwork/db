@@ -47,19 +47,7 @@ interface IDB {
 	 * @param string $table  表名
 	 * @return array
 	 */
-	public function getTableInfo($table);
-	
-	/**
-	 * 插入多行数据
-	 * 过滤掉没有的字段
-	 *
-	 * @param array $rows
-	 * @param string $table  插入表
-	 * @param array $fields  允许插入的字段名
-	 * @param string $isReplace = false 是否使用 REPLACE INTO插入数据，false为使用 INSERT INTO
-	 * @return PDOStatement
-	 */
-	public function insertRows(array $rows, $table, $fields = array(), $isReplace = false);
+	public function getTableSchema($table);
 	
 	/**
 	 * 开始事务，数据库支持事务并启用的时候事务才有效，
@@ -89,16 +77,16 @@ interface IDB {
 	public function commit();
 		
 	/**
-	 * 针对没有结果集合返回的写入操作
+	 * 执行SQL
+	 * 针对没有结果集合返回的写入操作，
 	 * 比如INSERT、UPDATE、DELETE等操作，它返回的结果是当前操作影响的列数。
-	 * 当增删改SQL中有变量时使用，如果SQL中有变量，请使用prepare()，
 	 * 
 	 * @param string $sql
-	 * @param array $args
+	 * @param array $args = []  sql格式化参数值列表 
 	 * @throws \wf\db\Exception
 	 * @return int
 	 */
-	public function exec($sql, array $args = array());
+	public function exec($sql, array $args = []);
 	
 	/**
 	 * 取得上一步 INSERT 操作产生的 ID
@@ -110,18 +98,12 @@ interface IDB {
 	/**
 	 * 执行SQL查询语句，一般用于只读查询
 	 * 
-	 * <pre>
-	 * useage:
-	 * $rs = $dbh->query($sql)->fetchColumn();
-	 * $rs = $dbh->query($sql)->fetch();
-	 * $rs = $dbh->query($sql)->fetchAll();
-	 * </pre>
-	 *
-	 * @param String $sql
+	 * @param string $sql
+	 * @param array $args = []  sql格式化参数值列表 
 	 * @throws \wf\db\Exception
 	 * @return \PDOStatement
 	 */
-	public function query($sql, array $args = array());
+	public function query($sql, array $args = []);
 	
 	/**
 	 * 事务回滚
@@ -149,28 +131,40 @@ interface IDB {
 	 * 获取第一列第一个字段
 	 * 
 	 * @param string $sql
-	 * @param array $args
-	 * @param bool $allowCache
+	 * @param array $args = []  sql格式化参数值列表
+	 * @param bool $allowCache = false
 	 */
-	public function getOne($sql, array $args = array(), $allowCache = false);
+	public function getColumn($sql, array $args = [], $allowCache = false);
 	
 	/**
 	 * 获取所有记录
 	 * 
 	 * @param string $sql
-	 * @param array $args
-	 * @param bool $allowCache
+	 * @param array $args = []  sql格式化参数值列表
+	 * @param bool $allowCache = false
 	 */
-	public function getAll($sql, array $args = array(), $allowCache = false);
+	public function getAll($sql, array $args = [], $allowCache = false);
 	
 	/**
 	 * 获取第一列
 	 * 
 	 * @param string $sql
-	 * @param array $args
-	 * @param bool $allowCache
+	 * @param array $args = []  sql格式化参数值列表
+	 * @param bool $allowCache = false
 	 */
-	public function getRow($sql, array $args = array(), $allowCache = false);
+	public function getRow($sql, array $args = [], $allowCache = false);
+
+	/**
+	 * 插入多行数据
+	 * 过滤掉没有的字段
+	 *
+	 * @param array $rows
+	 * @param string $table  插入表
+	 * @param array $fields  允许插入的字段名
+	 * @param string $isReplace = false 是否使用 REPLACE INTO插入数据，false为使用 INSERT INTO
+	 * @return PDOStatement
+	 */
+	public function insertRows(array $rows, $table, $fields = [], $isReplace = false);
 	
 }
 

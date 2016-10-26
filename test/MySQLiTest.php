@@ -11,7 +11,6 @@ require_once __DIR__ . '/../DBFactory.php';
 require_once __DIR__ . '/../adapter/MySQLi.php';
 
 use \wf\db\DBFactory;
-use \wf\db\adapter\MySQL;
 use wf\db\QueryHelper;
 
 /**
@@ -141,9 +140,9 @@ class MySQLTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * Tests mySQLi->getOne()
+	 * Tests mySQLi->getColumn()
 	 */
-	public function testGetOne() {
+	public function testGetColumn() {
 		$uniqe = uniqid();
 		$this->insertRow($uniqe);
 		
@@ -191,7 +190,7 @@ class MySQLTest extends PHPUnit_Framework_TestCase {
 			$this->mySQLi->rollBack();
 		}
 		
-		$lastStr = $this->mySQLi->getOne("SELECT str FROM wk_test_table ORDER BY id DESC");
+		$lastStr = $this->mySQLi->getColumn("SELECT str FROM wk_test_table ORDER BY id DESC");
 		$this->assertEquals($uniqe, $lastStr);
 	}
 }

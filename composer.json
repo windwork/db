@@ -1,15 +1,14 @@
 {
   "name" : "windwork/db",
   "description" : "windwork db component.Windwork MySQL数据库访问组件",
-  "version" : "0.1.0",
+  "version" : "0.2.2",
   "require" : {
-    "php" : ">=5.5.0",
-    "windwork/cache" : "*"
+    "php" : ">=5.5.0"
   },
   "license" : "MIT",
   "autoload" : {
     "psr-4" : {
-      "wf\\db\\" : "."
+      "wf\\db\\" : "lib"
     }
   },
   "type" : "library",

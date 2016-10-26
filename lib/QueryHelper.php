@@ -14,7 +14,7 @@ namespace wf\db;
  *
  * @package     wf.db
  * @author      erzh <cmpan@qq.com>
- * @link        http://www.windwork.org/manual/wf.db.sqlbuilder.html
+ * @link        http://www.windwork.org/manual/wf.db.queryhelper.html
  * @since       0.1.0
  */
 class QueryHelper {
@@ -307,82 +307,50 @@ class QueryHelper {
 	 * </ul>
 	 * <b>例如允许格式如下：</b>
 	 * <ul>
-	 *     <li>一个条件 $array = array('field', 'val', 'glue', 'type')</li>
-	 *     <li>多个不指定and/or的条件 $array = array(array('field', 'val', 'glue'), array('field', 'val', 'glue'), ...)</li>
-	 *     <li>多个指定and/or的条件$array = array('and', array('field', 'val', 'glue'), array('field', 'val', 'glue'), ...)</li>
-	 *     <li>$array = array('and|or', array('field', 'val', 'glue'), array('and|or', array('field1', 'val1', 'glue1'), array('field2', 'val2', 'glue2'), ...), array('field3', 'val', 'glue'), ...);</li>
+	 *     <li>一个条件 $options = array('field', 'val', 'glue', 'type')</li>
+	 *     <li>多个不指定and/or的条件 $options = array(array('field', 'val', 'glue'), array('field', 'val', 'glue'), ...)</li>
+	 *     <li>多个指定and/or的条件$options = array('and', array('field', 'val', 'glue'), array('field', 'val', 'glue'), ...)</li>
+	 *     <li>$options = array('and|or', array('field', 'val', 'glue'), array('and|or', array('field1', 'val1', 'glue1'), array('field2', 'val2', 'glue2'), ...), array('field3', 'val', 'glue'), ...);</li>
 	 * </ul>
 	 * 
-	 * @param array $array 查询条件 array('and|or', array('字段1', '值', '=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!='), array('字段1', '值', '逻辑'), ...)
+	 * @param array $options 查询条件 array('and|or', array('字段1', '值', '=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!='), array('字段1', '值', '逻辑'), ...)
 	 * @throws \wf\db\Exception
 	 * @return string
 	 */
-	public static function whereArr($array) {
-		if (!is_array($array)) {
-			throw new \wf\db\Exception('Illegal param, the param should be array, but string has given: $array = ' . var_export($array, 1));
+	public static function whereArr($options) {
+		if (!is_array($options) || empty($options[0]) || !(is_string($options[0]) || is_array($options[0]))) {
+			throw new \wf\db\Exception('Illegal param, the param should be array, but string has given: $options = ' . var_export($options, 1));
 		}
 
-		// 如果参数格式是如下，第一个元素是数组：
-		// $array = array(array('field', 'val', 'glue'), array('field', 'val', 'glue'), ...)
-		// $array = array(array('field', 'val', 'glue'), array('and', array('field', 'val', 'glue'), array('field', 'val', 'glue'), ...), ...)
-		if (isset($array[0]) && is_array($array[0])) {
-			$r = '';
-			$v0 = 'AND'; // 没有指定关系逻辑则使用and
-			$andOr = false;
-			foreach ($array as $item) {
-				if (!is_array($item)){
-					continue;
-				}
-				
-				$andOr && $r .= " $v0 ";
-				$r .= static::whereArr($item);
-				$andOr = true;
-			}
-			$r && $r = " ({$r}) ";
-			return $r;
+		if (is_array($options[0])) {
+			// [[], [], [] ...] => ['and', [], [], [] ...]
+			array_unshift($options, 'AND');
+			return static::whereArr($options);		
+		} 
 		
-		} else if(isset($array[0]) && is_string($array[0])) {
-			$v0 = strtoupper(trim($array[0]));
-			// 如果参数格式如下：
-			// $array = array('and|or', array('field', 'val', 'glue', 'type'), array('field2', 'val', 'glue'), ...);
-			// $array = array('and|or', array('and|or', array('field1', 'val1', 'glue1'), array('field2', 'val2', 'glue2'), ...), array('field3', 'val', 'glue'), ...);
-			if($v0 == 'AND' || $v0 == 'OR') {
-				unset($array[0]);
-				$r = '';
-				$andOr = false;
-				foreach ($array as $item) {
-					if(is_string($item[0]) && (strtoupper(trim($item[0])) == 'AND' || strtoupper(trim($item[0])) == 'OR')) {
-						$andOr && $r .= " $v0 ";
-						$r .= static::whereArr($item);
-					} elseif (!is_array($item)){
-						continue;
-					} else {
-						empty($item[2]) && $item[2] = '=';
-						isset($item[3]) || $item[3] = '';
-						$andOr && $r .= " $v0 ";
-						$r .= static::where($item[0], $item[1], $item[2], $item[3]);
-					}
+		// ['and|or', [], [] ...] 或 ['field', 'value' ...]
+		
+		$logic = strtoupper(trim($options[0]));		
+		if($logic == 'AND' || $logic == 'OR') {
+			// ['and|or', [], [] ...]
+			unset($options[0]);			
+			$pieces = [];
 			
-					$andOr = true;
-				}
-			
-				$r && $r = " ({$r}) ";
-			
-				return $r;
+			foreach ($options as $item) {
+				$pieces[] = static::whereArr($item);
 			}
 			
-			// 如果参数格式是： $array = array('field', 'val', 'glue')
-			else if($v0 != 'AND' && $v0 != 'OR' && isset($array[1]) && (empty($array[2]) || is_scalar($array[2]))) {
-				empty($array[2]) && $array[2] = '=';
-				isset($array[3]) || $array[3] = '';
-				return static::where($array[0], $array[1], $array[2], $array[3]);
-			} else {
-				throw new \wf\db\Exception('非法的where条件，请参阅\wf\db\ADB::whereArr()');
-			}			
+			$ret = implode(" {$logic} ", $pieces);		
+			$ret = " ({$ret}) ";
+		
+			return $ret;
 		} else {
-	    	throw new \wf\db\Exception('非法的where条件，请参阅\wf\db\ADB::whereArr()');
-	    }
-	    
+			// ['field', 'value', 'glue', 'type']
+			empty($options[2]) && $options[2] = '=';
+			isset($options[3]) || $options[3] = '';
+			
+			return static::where($options[0], $options[1], $options[2], $options[3]);
+		}
 	}
 		
 	/**
@@ -445,7 +413,7 @@ class QueryHelper {
 	/**
 	 * 查询选项解析
 	 * 
-	 * @param array $options = <pre>array(
+	 * @param \wf\db\Query|array $options = <pre>array(
 	 *     'fields' =>'f.a, f.b', // 字段名列表，默认是 *
 	 *     'table'  => 'table_a, table_b AS b', // 查询的表名，可以是多个表，默认是当前模型的表
 	 *     'join'   => array(array('table_name', 'field_a', 'field_b'), arrray(), ..., "格式2直接写join语法"), // => LEFT JOIN `table_name` ON `field_a` = `field_b`
@@ -459,6 +427,10 @@ class QueryHelper {
 	 * @return array
 	 */
 	public static function buildQueryOptions($options = array()) {
+		if (is_object($options) && $options instanceof \wf\db\Query) {
+			$options = $options->getOptions();
+		}
+		
 		if(!is_array($options)) {
 			throw new \wf\db\Exception('The param must be array!');
 		}
@@ -484,7 +456,8 @@ class QueryHelper {
 					}
 					$fieldA = QueryHelper::quoteFields($joinItem[1]);
 					$fieldB = QueryHelper::quoteFields($joinItem[2]);
-					$result['join'] .= " LEFT JOIN " . QueryHelper::quoteFields($joinItem[0]) . " ON {$fieldA} = {$fieldB} ";
+					$joinType = empty($joinItem[3]) ? 'LEFT JOIN' : $joinItem[3];
+					$result['join'] .= " {$joinType} " . QueryHelper::quoteFields($joinItem[0]) . " ON {$fieldA} = {$fieldB} ";
 				}
 			}
 		}
@@ -496,24 +469,70 @@ class QueryHelper {
 		$result['group'] = empty($options['group']) ? '' : ' GROUP BY ' . QueryHelper::quoteFields($options['group']);
 		
 		// having
-		$result['having'] = empty($options['having']) ? '' : ' HAVING ' . QueryHelper::whereArr($options['having']);
-
+		if (empty($options['having'])) {
+			$result['having'] = '';
+		} elseif (is_string($options['having'])) {
+			$result['having'] = ' HAVING ' . $options['having'];
+		} else {
+			$result['having'] = ' HAVING ' .QueryHelper::whereArr($options['having']);
+		}
+		
 		// order
 		$result['order'] = empty($options['order']) ? '' : ' ORDER BY ' . QueryHelper::order($options['order']);
+		
+		// limit
+		$result['limit'] = empty($options['limit']) ? '' : ' LIMIT ' . preg_replace("/[^0-9,]/", '', $options['limit']);
 				
 		return $result;
+	}
+
+
+	/**
+	 * 获取查询条件的SQL语句
+	 * @param array $options
+	 * @return string
+	 */
+	public static function optionsToSql($options) {
+		$options = QueryHelper::buildQueryOptions($options);
+		
+		$sql = "SELECT {$options['fields']}
+				FROM {$options['table']}
+				{$options['join']}
+				{$options['where']}
+				{$options['group']}
+				{$options['having']}
+				{$options['order']}
+				{$options['limit']}";
+		
+		return $sql;
+	}
+	
+	/**
+	 * 获取符合查询选项的记录数的SQL语句
+	 * @param array $options
+	 * @return string
+	 */
+	public static function optionsToCountSql($options) {
+		$options = QueryHelper::buildQueryOptions($options);
+
+		$sql = "SELECT COUNT({$options['fields']})
+				FROM {$options['table']}
+				{$options['join']}
+				{$options['where']}"; // no group|having
+		
+		return $sql;
 	}
 	
 	/**
 	 * 从数组的下标对应的值中获取SQL的"字段1=值1,字段2=值2"的结构
 	 * 
-	 * @param array $data 
-	 * @param array $keyInArray
-	 * @param array $keyNotInArray
-	 * @throws Exception
+	 * @param array $data 下标 => 值结构
+	 * @param array $keyInArray 包含此数组中 的下标则保留，否则去掉
+	 * @param array $keyNotInArray = [] 要去掉的下标
+	 * @throws \wf\db\Exception
 	 * @return string 返回 "`f1` = 'xx', `f2` = 'xxx'"
 	 */
-	public static function buildSqlSet(array $data, array $keyInArray, array $keyNotInArray = array()) {
+	public static function buildSqlSet(array $data, array $keyInArray, array $keyNotInArray = []) {
 		$set = array();
 		$arg = array();
 		$fields = $keyNotInArray ? array_diff($keyInArray, $keyNotInArray) : $keyInArray;
