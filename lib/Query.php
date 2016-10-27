@@ -186,33 +186,27 @@ class Query implements \ArrayAccess {
 	 * 
 	 * @param array $where 查询条件 
 	 * <pre>
-	 *   array(
-	 *   0 => '查询逻辑，and|or，不设置该项则查询条件默认使用AND关系', 
-	 *   1 => array('字段1', '值', '比较方式，默认=，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=', '参数值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句'), 
-	 *   2 => array('字段12', '值', '比较方式', '格式', '参数值的类型'), 
-	 *   ...)
+	 *   [
+	 *     0 => '查询逻辑，and|or，不设置该项则查询条件默认使用AND关系', 
+	 *     1 => array('字段1', '值', '比较方式，默认=，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=', '参数值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句'), 
+	 *     2 => array('字段12', '值', '比较方式', '格式', '参数值的类型'), 
+	 *     ...
+	 *   ]
 	 * </pre>
 	 * @return \wf\db\Query
 	 */
 	public function where($where) {
-		$this->options['where'] = $where;
+		$this->options['where'][] = $where;
 		
 		return $this;
 	}
 	
 	/**
-	 * 
-	 * @param array $where 查询条件 
-	 * <pre>
-	 *   array(
-	 *   0 => '查询逻辑，and|or，不设置该项则查询条件默认使用AND关系', 
-	 *   1 => array('字段1', '值', '比较方式，默认=，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=', '参数值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句'), 
-	 *   2 => array('字段12', '值', '比较方式', '格式', '参数值的类型'), 
-	 *   ...)
-	 * </pre>
+	 * 同where方法
+	 * @see \wf\db\Query::where()
 	 */
 	public function andWhere($where) {
-		$this->options['where'][] = $where;
+		$this->where($where);
 		
 		return $this;
 	}

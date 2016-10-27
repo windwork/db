@@ -173,8 +173,9 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see \wf\core\Object::getLastErr()
+	 * 
+	 * {@inheritDoc}
+	 * @see \wf\db\IDB::getLastErr()
 	 */
 	public function getLastErr() {
 		return implode(' ', $this->mysqli->error_list);
