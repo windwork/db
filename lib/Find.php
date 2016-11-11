@@ -9,7 +9,7 @@ namespace wf\db;
  * @link        http://www.windwork.org/manual/wf.db.query.html
  * @since       0.1.0
  */
-class Query implements \ArrayAccess {
+class Find implements \ArrayAccess {
 	/**
 	 * 
 	 * @var \wf\db\IDB
@@ -38,7 +38,7 @@ class Query implements \ArrayAccess {
 	/**
 	 * 
 	 * @param \wf\db\IDB $db
-	 * @return \wf\db\Query
+	 * @return \wf\db\Find
 	 */
 	public function setDb(\wf\db\IDB $db) {
 		$this->db = $db;
@@ -130,7 +130,7 @@ class Query implements \ArrayAccess {
 	/**
 	 * 字段名列表，默认是 *，如：f.a, f.b
 	 * @param string $fields
-	 * @return \wf\db\Query
+	 * @return \wf\db\Find
 	 */
 	public function fields($fields = '*') {
 		$this->options['fields'] = $fields;
@@ -142,9 +142,9 @@ class Query implements \ArrayAccess {
 	 * 查询的表名
 	 * 可以是多个表，默认是当前模型的表，table_a, table_b AS b
 	 * @param string $table
-	 * @return \wf\db\Query
+	 * @return \wf\db\Find
 	 */
-	public function table($table) {
+	public function from($table) {
 		$this->options['table'] = $table;
 		
 		return $this;
@@ -152,10 +152,12 @@ class Query implements \ArrayAccess {
 	
 	/**
 	 * 连接表，
-	 * 如： LEFT JOIN table_name ON field_a = field_b
+	 * 如： LEFT JOIN table_name t ON t.field_a = tb.field_b
+	 *     RIGHT JOIN table_name t ON t.field_a = tb.field_b
+	 *     INNER JOIN table_name t ON t.field_a = tb.field_b
 	 * @param string $join
 	 * @param bool $reset = false
-	 * @return \wf\db\Query
+	 * @return \wf\db\Find
 	 */
 	public function join($join, $reset = false) {
 		if ($reset) {
@@ -193,7 +195,7 @@ class Query implements \ArrayAccess {
 	 *     ...
 	 *   ]
 	 * </pre>
-	 * @return \wf\db\Query
+	 * @return \wf\db\Find
 	 */
 	public function where($where) {
 		$this->options['where'][] = $where;
@@ -203,7 +205,7 @@ class Query implements \ArrayAccess {
 	
 	/**
 	 * 同where方法
-	 * @see \wf\db\Query::where()
+	 * @see \wf\db\Find::where()
 	 */
 	public function andWhere($where) {
 		$this->where($where);
@@ -240,7 +242,7 @@ class Query implements \ArrayAccess {
 	 * 对$order参数进行SQL注入过滤后，在前面加上ORDER BY
 	 * 
 	 * @param string $order
-	 * @return \wf\db\Query
+	 * @return \wf\db\Find
 	 */
 	public function order($order) {
 		$this->options['order'] = $order;
@@ -252,7 +254,7 @@ class Query implements \ArrayAccess {
 	 * 对$group参数进行SQL注入过滤后，在前面加上GROUP BY
 	 * 
 	 * @param string $group
-	 * @return \wf\db\Query
+	 * @return \wf\db\Find
 	 */
 	public function group($group) {
 		$this->options['group'] = $group;
@@ -264,7 +266,7 @@ class Query implements \ArrayAccess {
 	 * 数组结构，格式同where
 	 * 对$having参数进行SQL注入过滤后，在前面加上 HAVING
 	 * @param string $having
-	 * @return \wf\db\Query
+	 * @return \wf\db\Find
 	 */
 	public function having($having) {
 		$this->options['having'] = $having;
@@ -276,7 +278,7 @@ class Query implements \ArrayAccess {
 	 * SQL分页查询
 	 * @param number $offset
 	 * @param number $rows
-	 * @return \wf\db\Query
+	 * @return \wf\db\Find
 	 */
 	public function limit($offset, $rows = 0) {
 		$this->options['limit'] = QueryHelper::limit($offset, $rows);

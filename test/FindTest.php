@@ -1,20 +1,20 @@
 <?php
 require_once '../lib/QueryHelper.php';
 require_once '../lib/Exception.php';
-require_once '../lib/Query.php';
+require_once '../lib/Find.php';
 
 use \wf\db\QueryHelper;
-use \wf\db\Query;
+use \wf\db\Find;
 use \wf\db\Exception;
 
 /**
- * Query test case.
+ * Find test case.
  */
-class QueryTest extends PHPUnit_Framework_TestCase {
+class FindTest extends PHPUnit_Framework_TestCase {
 	
 	/**
 	 *
-	 * @var Query
+	 * @var Find
 	 */
 	private $query;
 	
@@ -24,16 +24,16 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	protected function setUp() {
 		parent::setUp ();
 		
-		// TODO Auto-generated QueryTest::setUp()
+		// TODO Auto-generated FindTest::setUp()
 		
-		$this->query = new Query();
+		$this->query = new Find();
 	}
 	
 	/**
 	 * Cleans up the environment after running a test.
 	 */
 	protected function tearDown() {
-		// TODO Auto-generated QueryTest::tearDown()
+		// TODO Auto-generated FindTest::tearDown()
 		$this->query = null;
 		
 		parent::tearDown ();
@@ -47,11 +47,11 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * Tests Query->getOptions()
+	 * Tests Find->getOptions()
 	 */
 	public function testGetOptions() {
-		$cdts = (new \wf\db\Query())
-		->table('my_table tbl')
+		$cdts = (new \wf\db\Find())
+		->from('my_table tbl')
 		->fields('a,b,c')
 		->group('aa, bb')
 		->having(['aa', 55, '<'])
@@ -64,12 +64,12 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 		$sqlStrip = function($str) {
 			$str = str_replace('`', '', strtolower($str));
 			$str = preg_replace("/[\r\n\t]/s", ' ', $str);
-			$str = preg_replace("/\s+/", ' ', trim($str));
+			$str = preg_replace("/\s+/", '', trim($str));
 			
 			return $str;
 		};
 		
-		$exp = "SELECT `a`,`b`,`c` FROM `my_table` `tbl` LEFT JOIN tb.aaa a ON a.xx = tbl.id WHERE (`id`='11' AND `name` LIKE('mimo%')) GROUP BY `aa`,`bb` HAVING `aa`<'55' ORDER BY a.xx ";
+		$exp = "SELECT `a`,`b`,`c` FROM `my_table` `tbl` LEFT JOIN tb.aaa a ON a.xx = tbl.id WHERE ((`id`='11' AND `name` LIKE('mimo%'))) GROUP BY `aa`,`bb` HAVING `aa`<'55' ORDER BY a.xx ";
 		$exp = $sqlStrip($exp);
 		$sql = $sqlStrip($sql);
 
@@ -87,51 +87,51 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * Tests Query->fields()
+	 * Tests Find->fields()
 	 */
 	public function testFields() {
-		// TODO Auto-generated QueryTest->testFields()
+		// TODO Auto-generated FindTest->testFields()
 		$this->markTestIncomplete ( "fields test not implemented" );
 		
 		$this->query->fields(/* parameters */);
 	}
 	
 	/**
-	 * Tests Query->table()
+	 * Tests Find->from()
 	 */
-	public function testTable() {
-		// TODO Auto-generated QueryTest->testTable()
+	public function testFrom() {
+		// TODO Auto-generated FindTest->testTable()
 		$this->markTestIncomplete ( "table test not implemented" );
 		
-		$this->query->table(/* parameters */);
+		$this->query->from(/* parameters */);
 	}
 	
 	/**
-	 * Tests Query->join()
+	 * Tests Find->join()
 	 */
 	public function testJoin() {
-		// TODO Auto-generated QueryTest->testJoin()
+		// TODO Auto-generated FindTest->testJoin()
 		$this->markTestIncomplete ( "join test not implemented" );
 		
 		$this->query->join(/* parameters */);
 	}
 	
 	/**
-	 * Tests Query->where()
+	 * Tests Find->where()
 	 */
 	public function testWhere() {
-		// TODO Auto-generated QueryTest->testWhere()
+		// TODO Auto-generated FindTest->testWhere()
 		$this->markTestIncomplete ( "where test not implemented" );
 		
 		$this->query->where(/* parameters */);
 	}
 	
 	/**
-	 * Tests Query->where()
+	 * Tests Find->where()
 	 */
 	public function testAndWhere() {
 		$this->query->andWhere(['a', '1112', '='])
-		->table('my_tb t')
+		->from('my_tb t')
 		->join('LEFT JOIN tb_join j ON j.id = t.id')
 		->join('LEFT JOIN tb_join_2 j2 ON j2.id = t.id')
 		->andWhere([['b', '1112', '='], ['c', 23232, '>'], ['x', 33, '>']])
@@ -163,20 +163,20 @@ class QueryTest extends PHPUnit_Framework_TestCase {
 	}
 	
 	/**
-	 * Tests Query->group()
+	 * Tests Find->group()
 	 */
 	public function testGroup() {
-		// TODO Auto-generated QueryTest->testGroup()
+		// TODO Auto-generated FindTest->testGroup()
 		$this->markTestIncomplete ( "group test not implemented" );
 		
 		$this->query->group(/* parameters */);
 	}
 	
 	/**
-	 * Tests Query->having()
+	 * Tests Find->having()
 	 */
 	public function testHaving() {
-		// TODO Auto-generated QueryTest->testHaving()
+		// TODO Auto-generated FindTest->testHaving()
 		$this->markTestIncomplete ( "having test not implemented" );
 		
 		$this->query->having(/* parameters */);

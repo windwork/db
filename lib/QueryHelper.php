@@ -427,7 +427,7 @@ class QueryHelper {
 	 * @return array
 	 */
 	public static function buildQueryOptions($options = array()) {
-		if (is_object($options) && $options instanceof \wf\db\Query) {
+		if (is_object($options) && $options instanceof \wf\db\Find) {
 			$options = $options->getOptions();
 		}
 		
