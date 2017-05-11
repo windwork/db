@@ -584,7 +584,7 @@ class QueryBuilder
      */
     protected static function buildOptionLimit($limit)
     {
-        return empty($limit) ? ' LIMIT 100' : ' LIMIT ' . preg_replace("/[^0-9,]/", '', $limit);
+        return empty($limit) ? '' : ' LIMIT ' . preg_replace("/[^0-9,]/", '', $limit);
     }
 
     /**

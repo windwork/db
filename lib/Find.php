@@ -62,11 +62,20 @@ class Find
     /**
      * 获取符合条件的所有记录
      * 
+     * @param int $offset = 0 开始查询记录下标，最小为0
+     * @param int $rows = 0 返回记录数，为0则忽略offset和rows都使用默认值
      * @return array
      */
-    public function fetchAll() 
-    {
-        $sql = $this->asSql();
+    public function fetchAll($offset = 0, $rows = 0) 
+    {        
+        $opts = $this->options;
+        if ($offset && $rows) {
+            $offset = (int)$offset;
+            $rows = (int)$rows;            
+            $opts['limit'] = "{$offset},{$rows}";
+        }
+        
+        $sql = QueryBuilder::optionsToSql($opts);
         $all = $this->db()->getAll($sql);
         
         return $all;
