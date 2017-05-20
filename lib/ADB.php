@@ -78,7 +78,7 @@ abstract class ADB
         static $tableSchemaList = array();
         
         if((!$tableSchemaList || empty($tableSchemaList[$table]))) {
-            $rows = $this->getAll("SHOW COLUMNS FROM {$table}");
+            $rows = $this->getAll("SHOW COLUMNS FROM %t", [$table]);
             $tableSchema = array(
                 'pk'      => '', 
                 'ai'      => false, 
