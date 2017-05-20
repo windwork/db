@@ -1,7 +1,7 @@
 {
   "name" : "windwork/db",
   "description" : "windwork db component.Windwork MySQL数据库访问组件",
-  "version" : "0.3.1",
+  "version" : "0.3.2",
   "require" : {
     "php" : ">=5.5.0"
   },

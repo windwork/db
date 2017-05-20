@@ -9,9 +9,6 @@
  */
 namespace wf\db\strategy;
 
-use \wf\db\QueryBuilder;
-
-
 /**
  * 使用 PDO扩展对MySQL数据库进行操作
  * 如果是自己写sql语句的时候，请不要忘了防注入，只是在您不输入sql的情况下帮您过滤MySQL注入了
@@ -93,10 +90,10 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      */
     public function query($sql, array $args = array()) {
         if ($args) {
-            $sql = QueryBuilder::format($sql, $args);
+            $sql = \wf\db\QueryBuilder::format($sql, $args);
         }
         
-        $sql = QueryBuilder::tablePrefix($sql, $this->cfg['tablePrefix']);
+        $sql = \wf\db\QueryBuilder::tablePrefix($sql, $this->cfg['tablePrefix']);
                             
         // 记录数据库查询次数
         $this->execTimes ++;
