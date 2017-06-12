@@ -79,7 +79,7 @@ class QueryBuilder
      * @param string $field
      * @return string
      */
-    public static function quoteFieldName($field) 
+    public static function quoteFieldName($field)
     {
         $field = trim($field);
         if(!$field || is_numeric($field)) {
@@ -636,8 +636,8 @@ class QueryBuilder
      */
     public static function buildSqlSet(array $data, array $keyInArray, array $keyNotInArray = [])
     {
-        $set = array();
-        $arg = array();
+        $set = [];
+        $arg = [];
         $fields = $keyNotInArray ? array_diff($keyInArray, $keyNotInArray) : $keyInArray;
     
         // 取表中存在的字段（MySQL字段名本身不区分大小写，我们全部转成小写）

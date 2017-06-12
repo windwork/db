@@ -34,7 +34,7 @@ class Find
         // union 很少使用不支持，如需要直接写SQL
     ];
     
-    public function __construct(array $options = []) 
+    public function __construct(array $options = [])
     {
         $this->options = $options;
     }
@@ -44,7 +44,7 @@ class Find
      * @param \wf\db\IDB $db
      * @return \wf\db\Find
      */
-    public function setDb(\wf\db\IDB $db) 
+    public function setDb(\wf\db\IDB $db)
     {
         $this->db = $db;
         return $this;
@@ -54,7 +54,7 @@ class Find
      * 
      * @return \wf\db\IDB
      */
-    public function db() 
+    public function db()
     {
         return $this->db;
     }
@@ -66,7 +66,7 @@ class Find
      * @param int $rows = 0 返回记录数，为0则忽略offset和rows都使用默认值
      * @return array
      */
-    public function fetchAll($offset = 0, $rows = 0) 
+    public function fetchAll($offset = 0, $rows = 0)
     {        
         $opts = $this->options;
         if ($offset && $rows) {
@@ -86,7 +86,7 @@ class Find
      * 
      * @return array
      */
-    public function fetchRow() 
+    public function fetchRow()
     {
         $opts = $this->options;
         $opts['limit'] = 1;
@@ -102,7 +102,7 @@ class Find
      * @param string $field
      * @return scalar
      */
-    public function fetchColumn($field = '') 
+    public function fetchColumn($field = '')
     {
         $opts = $this->options;
         
@@ -121,7 +121,7 @@ class Find
      * @param string $field
      * @return int
      */
-    public function fetchCount($field = '') 
+    public function fetchCount($field = '')
     {
         $opts = $this->options;
         
@@ -140,7 +140,7 @@ class Find
      * 
      * @return array
      */
-    public function getOptions() 
+    public function getOptions()
     {
         return $this->options;
     }
@@ -150,7 +150,7 @@ class Find
      * @param string $field
      * @return \wf\db\Find
      */
-    public function field($field = '*') 
+    public function field($field = '*')
     {
         $this->options['field'] = $field;
         
@@ -162,7 +162,7 @@ class Find
      * @param string $fields
      * @return \wf\db\Find
      */
-    public function fieldRaw($fields = '*') 
+    public function fieldRaw($fields = '*')
     {
         $this->options['fieldRaw'] = $fields;
         
@@ -175,7 +175,7 @@ class Find
      * @param string $table
      * @return \wf\db\Find
      */
-    public function from($table) 
+    public function from($table)
     {
         $this->options['table'] = $table;
         
@@ -193,7 +193,7 @@ class Find
      * @param string $joinType = 'LEFT' join类型，LEFT|RIGHT|INNER|CROSS
      * @return \wf\db\Find
      */
-    public function join($table, $onFieldA, $onFieldB, $joinType = 'LEFT') 
+    public function join($table, $onFieldA, $onFieldB, $joinType = 'LEFT')
     {
         $joinType = strtoupper(trim($joinType));
         if (!in_array($joinType, ['LEFT', 'RIGHT', 'INNER', 'CROSS'])) {
@@ -233,7 +233,7 @@ class Find
      * </pre>
      * @return \wf\db\Find
      */
-    public function whereMulti($where) 
+    public function whereMulti($where)
     {
         $this->options['where'][] = $where;
         
@@ -250,7 +250,7 @@ class Find
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
      * @return \wf\db\Find
      */
-    public function where($field, $value, $operator = '=', $type = 'string') 
+    public function where($field, $value, $operator = '=', $type = 'string')
     {
         $this->options['where'][] = [$field, $value, $operator, $type];
         
@@ -268,7 +268,7 @@ class Find
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
      * @return \wf\db\Find
      */
-    public function andWhere($field, $value, $operator = '=', $type = 'string') 
+    public function andWhere($field, $value, $operator = '=', $type = 'string')
     {
         $this->where($field, $value, $operator, $type);
         
@@ -286,7 +286,7 @@ class Find
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
      * @return \wf\db\Find
      */
-    public function orWhere($field, $value, $operator = '=', $type = 'string') 
+    public function orWhere($field, $value, $operator = '=', $type = 'string')
     {
         if (!empty($this->options['where'])) {
             $this->options['where'] = [
@@ -307,7 +307,7 @@ class Find
      * @param string $order
      * @return \wf\db\Find
      */
-    public function order($order) 
+    public function order($order)
     {
         $this->options['order'] = $order;
         
@@ -320,7 +320,7 @@ class Find
      * @param string $group
      * @return \wf\db\Find
      */
-    public function group($group) 
+    public function group($group)
     {
         $this->options['group'] = $group;
         
@@ -356,7 +356,7 @@ class Find
      * </pre>
      * @return \wf\db\Find
      */
-    public function havingMulti($having) 
+    public function havingMulti($having)
     {
         $this->options['having'][] = $having;
         
@@ -373,7 +373,7 @@ class Find
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
      * @return \wf\db\Find
      */
-    public function having($field, $value, $operator = '=', $type = 'string') 
+    public function having($field, $value, $operator = '=', $type = 'string')
     {
         $this->options['having'][] = [$field, $value, $operator, $type];
         
@@ -391,7 +391,7 @@ class Find
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
      * @return \wf\db\Find
      */
-    public function andHaving($field, $value, $operator = '=', $type = 'string') 
+    public function andHaving($field, $value, $operator = '=', $type = 'string')
     {
         $this->having($field, $value, $operator, $type);
         
@@ -408,7 +408,7 @@ class Find
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
      * @return \wf\db\Find
      */
-    public function orHaving($field, $value, $operator = '=', $type = 'string') 
+    public function orHaving($field, $value, $operator = '=', $type = 'string')
     {
         if (!empty($this->options['having'])) {
             $this->options['having'] = [
@@ -429,7 +429,7 @@ class Find
      * @param number $rows
      * @return \wf\db\Find
      */
-    public function limit($offset, $rows = 0) 
+    public function limit($offset, $rows = 0)
     {
         $offset = (int)($offset > 0 ? $offset : 0);
         $rows   = (int)($rows > 0 ? $rows : 0);
@@ -443,7 +443,7 @@ class Find
      * 将查询选项转成SQL语句
      * @return string
      */
-    public function asSql() 
+    public function asSql()
     {
         return QueryBuilder::optionsToSql($this->options);
     }

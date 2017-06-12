@@ -1,9 +1,10 @@
 {
   "name" : "windwork/db",
   "description" : "windwork db component.Windwork MySQL数据库访问组件",
-  "version" : "0.3.3",
+  "version" : "0.5.0",
   "require" : {
-    "php" : ">=5.5.0"
+    "php" : ">=5.5.0",
+    "ext-pdo_mysql" : "*"
   },
   "license" : "MIT",
   "autoload" : {

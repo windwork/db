@@ -18,7 +18,8 @@ namespace wf\db\strategy;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
+class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
+{
     /**
      * 数据库操作对象
      * 
@@ -30,7 +31,8 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * @param array $cfg
      * @throws \wf\db\Exception
      */
-    public function __construct(array $cfg) {
+    public function __construct(array $cfg)
+    {
         if (!class_exists('\\PDO')) {
             throw new \wf\db\Exception('error on connect to database：你的PHP引擎未启用PDO_MYSQL扩展。');
         }
@@ -53,7 +55,8 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::beginTransaction()
      */
-    public function beginTransaction() {
+    public function beginTransaction()
+    {
         if (!$this->transactions) {
             $this->dbh->beginTransaction();
         }
@@ -67,7 +70,8 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::commit()
      */
-    public function commit() {
+    public function commit()
+    {
         --$this->transactions;
     
         if($this->transactions == 0 && false === $this->dbh->commit()) {
@@ -80,7 +84,8 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::lastInsertId()
      */
-    public function lastInsertId() {
+    public function lastInsertId()
+    {
         //return $this->dbh->lastInsertId(); // 部分情况不能获取到
         return $this->getColumn("SELECT LAST_INSERT_ID()");
     }
@@ -90,7 +95,8 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::query()
      */
-    public function query($sql, array $args = array()) {
+    public function query($sql, array $args = [])
+    {
         if ($args) {
             $sql = \wf\db\QueryBuilder::format($sql, $args);
         }
@@ -114,7 +120,8 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::exec()
      */
-    public function exec($sql, array $args = array()) {
+    public function exec($sql, array $args = [])
+    {
         if ($args) {
             $sql = \wf\db\QueryBuilder::format($sql, $args);
         }
@@ -140,10 +147,11 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::getAll()
      */
-    public function getAll($sql, array $args = array()) {
+    public function getAll($sql, array $args = [])
+    {
         $query = $this->query($sql, $args);
         if (!$query) {
-            return  array();
+            return [];
         }
         
         $rs = $query->fetchAll(\PDO::FETCH_ASSOC);
@@ -155,10 +163,11 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::getRow()
      */
-    public function getRow($sql, array $args = array()) {
+    public function getRow($sql, array $args = [])
+    {
         $query = $this->query($sql, $args);
         if (!$query) {
-            return  array();
+            return [];
         }
         
         $rs = $query->fetch(\PDO::FETCH_ASSOC);
@@ -170,7 +179,8 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::getColumn()
      */
-    public function getColumn($sql, array $args = array()) {
+    public function getColumn($sql, array $args = [])
+    {
         $query = $this->query($sql, $args);
         if (!$query) {
             return  null;
@@ -186,7 +196,8 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::getLastErr()
      */
-    public function getLastErr() {
+    public function getLastErr()
+    {
         return implode(' ', $this->dbh->errorInfo());
     }
         
@@ -195,7 +206,8 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::setAutoCommit()
      */
-    public function setAutoCommit($isAutoCommit = false) {
+    public function setAutoCommit($isAutoCommit = false)
+    {
         $this->dbh->setAttribute(\PDO::ATTR_AUTOCOMMIT, $isAutoCommit);
         
         return $this;
@@ -206,7 +218,8 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::rollBack()
      */
-    public function rollBack() {
+    public function rollBack()
+    {
         --$this->transactions;
         
         if ($this->transactions <= 0 && false === $this->dbh->rollback()) {

@@ -18,7 +18,8 @@ namespace wf\db\strategy;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
+class MySQLi extends \wf\db\ADB implements \wf\db\IDB 
+{
     /**
      * 数据库操作对象
      * 
@@ -32,7 +33,8 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      * @param array $cfg
      * @throws \wf\db\Exception
      */
-    public function __construct(array $cfg) {
+    public function __construct(array $cfg)
+    {
         if (!class_exists('\\mysqli')) {
             throw new \wf\db\Exception('error on connect to database：你的PHP引擎未启用mysqli扩展。');
         }
@@ -51,7 +53,8 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      * (non-PHPdoc)
      * @see DB::beginTransaction()
      */
-    public function beginTransaction() {
+    public function beginTransaction()
+    {
         if (!$this->transactions) {
             $this->mysqli->begin_transaction();
         }
@@ -64,7 +67,8 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      * (non-PHPdoc)
      * @see DB::commit()
      */
-    public function commit() {
+    public function commit()
+    {
         --$this->transactions;
     
         if($this->transactions == 0 && false === $this->mysqli->commit()) {
@@ -76,7 +80,8 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      * (non-PHPdoc)
      * @see DB::lastInsertId()
      */
-    public function lastInsertId() {
+    public function lastInsertId()
+    {
         return $this->mysqli->insert_id;
     }
     
@@ -88,7 +93,8 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      * @throws \wf\db\Exception
      * @return \mysqli_result
      */
-    public function query($sql, array $args = array()) {
+    public function query($sql, array $args = [])
+    {
         if ($args) {
             $sql = \wf\db\QueryBuilder::format($sql, $args);
         }
@@ -117,19 +123,21 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      * @throws \wf\db\Exception
      * @return bool 
      */
-    public function exec($sql, array $args = array()) {
-        return (bool)$this->query($sql, $args);
+    public function exec($sql, array $args = [])
+    {
+        return $this->query($sql, $args);
     }
     
     /**
      * (non-PHPdoc)
      * @see DB::getAll()
      */
-    public function getAll($sql, array $args = array()) {
+    public function getAll($sql, array $args = [])
+    {
         $result = $this->query($sql, $args);
         
         if (!$result) {
-            return  array();
+            return [];
         }
 
         $rows = $result->fetch_all(MYSQLI_ASSOC);
@@ -141,11 +149,12 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      * (non-PHPdoc)
      * @see DB::getRow()
      */
-    public function getRow($sql, array $args = array()) {
+    public function getRow($sql, array $args = [])
+    {
         $result = $this->query($sql, $args);
         
         if (!$result) {
-            return  array();
+            return [];
         }
         
         $row = $result->fetch_row();
@@ -157,7 +166,8 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      * (non-PHPdoc)
      * @see DB::getColumn()
      */
-    public function getColumn($sql, array $args = array()) {
+    public function getColumn($sql, array $args = [])
+    {
         $result = $this->query($sql, $args);
         
         if (!$result) {
@@ -174,7 +184,8 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      * {@inheritDoc}
      * @see \wf\db\IDB::getLastErr()
      */
-    public function getLastErr() {
+    public function getLastErr()
+    {
         return implode(' ', $this->mysqli->error_list);
     }
         
@@ -183,13 +194,15 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB {
      * 
      * @return \wf\db\IDB
      */
-    public function setAutoCommit($isAutoCommit = false) {
+    public function setAutoCommit($isAutoCommit = false)
+    {
         $this->mysqli->autocommit($isAutoCommit);
         
         return $this;
     }
     
-    public function rollBack() {
+    public function rollBack()
+    {
         --$this->transactions;
             
         if ($this->transactions <= 0 && false === $this->mysqli->rollback()) {                

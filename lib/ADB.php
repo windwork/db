@@ -23,7 +23,7 @@ abstract class ADB
      * 数据库连接配置
      * @var array
      */
-    protected $cfg = array();
+    protected $cfg = [];
 
     /**
      * 开启事务的次数，记录次数解决嵌套事务的问题
@@ -35,7 +35,7 @@ abstract class ADB
      * 记录当前请求执行的SQL查询语句
      * @var array
      */
-    protected $log = array();
+    protected $log = [];
             
     /**
      * 数据库当前页面连接次数,每次实行SQL语句的时候 ++
@@ -73,16 +73,16 @@ abstract class ADB
      * @param string $table  表名
      * @return array
      */
-    public function getTableSchema($table) 
+    public function getTableSchema($table)
     {
-        static $tableSchemaList = array();
+        static $tableSchemaList = [];
         
         if((!$tableSchemaList || empty($tableSchemaList[$table]))) {
             $rows = $this->getAll("SHOW COLUMNS FROM %t", [$table]);
             $tableSchema = array(
                 'pk'      => '', 
                 'ai'      => false, 
-                'field'   => array()
+                'field'   => []
             );
             foreach ($rows as $row) {
                 $tableSchema['field'][strtolower($row['Field'])] = $row;
@@ -114,7 +114,7 @@ abstract class ADB
      * @param string $isReplace = false 是否使用 REPLACE INTO插入数据，false为使用 INSERT INTO
      * @return PDOStatement
      */
-    public function insertRows(array $rows, $table, $fieldArr = array(), $isReplace = false) 
+    public function insertRows(array $rows, $table, $fieldArr = [], $isReplace = false)
     {
         $type = $isReplace ? 'REPLACE' : 'INSERT';
         
@@ -123,7 +123,7 @@ abstract class ADB
         $allowFields = QueryBuilder::quoteFieldNames(implode(',', $allowFields));
         
         // 
-        $valueArr = array();
+        $valueArr = [];
         foreach ($rows as $row) {
             $rowStr = '';
             foreach ($row as $key => $val) {
@@ -145,7 +145,7 @@ abstract class ADB
      * 构筑函数设置配置信息
      * @param array $cfg
      */
-    public function __construct(array $cfg) 
+    public function __construct(array $cfg)
     {
         $this->cfg = $cfg;
     }
