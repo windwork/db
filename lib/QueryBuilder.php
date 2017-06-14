@@ -417,7 +417,7 @@ class QueryBuilder
      *     'having' => '', // 数组结构，格式同where，将对其进行SQL注入过滤并且在前面加上 HAVING
      *     'order'  => '', // 将对其进行SQL注入过滤并且在前面加上 ORDER BY
      * )</pre>
-     * @see \wf\db\ADB::whereArr()
+     * @see \wf\db\DBInterface::whereArr()
      * @throws \wf\db\Exception
      * @return array
      */

@@ -3,8 +3,8 @@ if (PHP_SAPI != 'cli') {
     die('access denied');
 }
 
-require_once __DIR__ . '/../lib/IDB.php';
-require_once __DIR__ . '/../lib/ADB.php';
+require_once __DIR__ . '/../lib/DBInterface.php';
+require_once __DIR__ . '/../lib/DBAbstract.php';
 require_once __DIR__ . '/../lib/Exception.php';
 require_once __DIR__ . '/../lib/QueryBuilder.php';
 require_once __DIR__ . '/../lib/strategy/PDOMySQL.php';
@@ -18,7 +18,7 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
 {
     /**
      * 
-     * @var \wf\db\IDB
+     * @var \wf\db\DBInterface
      */
     private $pDOMySQL;
     

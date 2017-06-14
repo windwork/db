@@ -13,7 +13,7 @@ class Find
 {
     /**
      * 
-     * @var \wf\db\IDB
+     * @var \wf\db\DBInterface
      */
     protected $db;
     
@@ -41,10 +41,10 @@ class Find
     
     /**
      * 
-     * @param \wf\db\IDB $db
+     * @param \wf\db\DBInterface $db
      * @return \wf\db\Find
      */
-    public function setDb(\wf\db\IDB $db)
+    public function setDb(\wf\db\DBInterface $db)
     {
         $this->db = $db;
         return $this;
@@ -52,7 +52,7 @@ class Find
     
     /**
      * 
-     * @return \wf\db\IDB
+     * @return \wf\db\DBInterface
      */
     public function db()
     {

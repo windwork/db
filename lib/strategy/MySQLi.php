@@ -18,7 +18,7 @@ namespace wf\db\strategy;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-class MySQLi extends \wf\db\ADB implements \wf\db\IDB 
+class MySQLi extends \wf\db\DBAbstract implements \wf\db\DBInterface 
 {
     /**
      * 数据库操作对象
@@ -182,7 +182,7 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::getLastErr()
+     * @see \wf\db\DBInterface::getLastErr()
      */
     public function getLastErr()
     {
@@ -192,7 +192,7 @@ class MySQLi extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 设置是否自动提交事务，启用事务的时候有效
      * 
-     * @return \wf\db\IDB
+     * @return \wf\db\DBInterface
      */
     public function setAutoCommit($isAutoCommit = false)
     {

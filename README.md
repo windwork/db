@@ -95,7 +95,7 @@ $column = $db->getColumn("SELECT * FROM my_table LIMIT 1");
 $db->exec("INSERT INTO my_table (f1, f2) VALUE ('fff1', 'ffff2')");
 ```
 
-## 防注入
+## SQL防注入
 我们通过sql格式化以后，可有效防注入。
 
 以%作为标识，%后面的字符为格式化参数的数据类型。支持的类型有：
@@ -119,9 +119,27 @@ $db->getAll($sql, $arg);
 ## 使用事务
 使用事务的前提是：你使用的引擎必须支持事务。MyISAM、MEMORY引擎不支持事务，InnoDB引擎支持事务。MySQL经过多年的发展，InnoDB引擎已经是MySQL引擎中最有优势的引擎，所以推荐你优先使用InnoDB引擎。
 
-- Windwork 模型基类中默认已启用事务，不需要另外启用。
-- 可以嵌套启用事务，最终只在最上一级事务提交后才会真正执行事务。
+可以嵌套启用事务，最终只在最上一级事务提交后才会真正执行事务。
 
+使用事务的案例：
+
+```
+
+try {
+    // 开启事务
+    $trans = db()->beginTransaction();
+
+    // 数据库写入业务代码
+    // ……
+
+    // 没异常则提交事务
+    $trans->commit();
+} catch(\Exception $e) {
+    // 出现异常则回滚事务
+    $trans->rollback();
+}
+
+```
 
 ## TODO
 - 完善使用文档

@@ -17,7 +17,7 @@ namespace wf\db;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-abstract class ADB 
+abstract class DBAbstract 
 {    
     /**
      * 数据库连接配置

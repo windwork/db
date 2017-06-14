@@ -18,7 +18,7 @@ namespace wf\db\strategy;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
+class PDOMySQL extends \wf\db\DBAbstract implements \wf\db\DBInterface
 {
     /**
      * 数据库操作对象
@@ -53,7 +53,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::beginTransaction()
+     * @see \wf\db\DBInterface::beginTransaction()
      */
     public function beginTransaction()
     {
@@ -68,7 +68,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::commit()
+     * @see \wf\db\DBInterface::commit()
      */
     public function commit()
     {
@@ -82,7 +82,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::lastInsertId()
+     * @see \wf\db\DBInterface::lastInsertId()
      */
     public function lastInsertId()
     {
@@ -93,7 +93,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::query()
+     * @see \wf\db\DBInterface::query()
      */
     public function query($sql, array $args = [])
     {
@@ -118,7 +118,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::exec()
+     * @see \wf\db\DBInterface::exec()
      */
     public function exec($sql, array $args = [])
     {
@@ -145,7 +145,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::getAll()
+     * @see \wf\db\DBInterface::getAll()
      */
     public function getAll($sql, array $args = [])
     {
@@ -161,7 +161,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::getRow()
+     * @see \wf\db\DBInterface::getRow()
      */
     public function getRow($sql, array $args = [])
     {
@@ -177,7 +177,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::getColumn()
+     * @see \wf\db\DBInterface::getColumn()
      */
     public function getColumn($sql, array $args = [])
     {
@@ -194,7 +194,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::getLastErr()
+     * @see \wf\db\DBInterface::getLastErr()
      */
     public function getLastErr()
     {
@@ -204,7 +204,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::setAutoCommit()
+     * @see \wf\db\DBInterface::setAutoCommit()
      */
     public function setAutoCommit($isAutoCommit = false)
     {
@@ -216,7 +216,7 @@ class PDOMySQL extends \wf\db\ADB implements \wf\db\IDB
     /**
      * 
      * {@inheritDoc}
-     * @see \wf\db\IDB::rollBack()
+     * @see \wf\db\DBInterface::rollBack()
      */
     public function rollBack()
     {

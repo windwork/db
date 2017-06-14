@@ -17,7 +17,7 @@ namespace wf\db;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-interface IDB
+interface DBInterface
 {
     /**
      * 获取模型数据表信息
@@ -52,7 +52,7 @@ interface IDB
     
     /**
      * 开始事务，数据库支持事务并启用的时候事务才有效，
-     * 默认没有启用自动提交，需要调用ADB::commit()提交
+     * 默认没有启用自动提交，需要调用DBAbstract::commit()提交
      * 
      * <code>
      * useage:
@@ -66,7 +66,7 @@ interface IDB
      *       db()->rollBack();
      *   }
      * </code>
-     * @return \wf\db\IDB
+     * @return \wf\db\DBInterface
      */
     public function beginTransaction();
     
@@ -119,7 +119,7 @@ interface IDB
      * 设置是否自动提交事务，启用事务的时候有效
      * 
      * @param bool $isAutoCommit
-     * @return \wf\db\IDB
+     * @return \wf\db\DBInterface
      */
     public function setAutoCommit($isAutoCommit = false);
     
