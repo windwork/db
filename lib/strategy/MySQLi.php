@@ -18,8 +18,10 @@ namespace wf\db\strategy;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-class MySQLi extends \wf\db\DBAbstract implements \wf\db\DBInterface 
+class MySQLi implements \wf\db\DBInterface 
 {
+    use \wf\db\DBTrait;
+    
     /**
      * 数据库操作对象
      * 

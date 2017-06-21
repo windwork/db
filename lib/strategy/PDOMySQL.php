@@ -18,8 +18,10 @@ namespace wf\db\strategy;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-class PDOMySQL extends \wf\db\DBAbstract implements \wf\db\DBInterface
+class PDOMySQL implements \wf\db\DBInterface
 {
+    use \wf\db\DBTrait;
+    
     /**
      * 数据库操作对象
      * 

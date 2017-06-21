@@ -17,7 +17,7 @@ namespace wf\db;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-abstract class DBAbstract 
+trait DBTrait 
 {    
     /**
      * 数据库连接配置
@@ -150,5 +150,3 @@ abstract class DBAbstract
         $this->cfg = $cfg;
     }
 }
-
-
