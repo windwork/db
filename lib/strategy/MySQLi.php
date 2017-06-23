@@ -18,10 +18,8 @@ namespace wf\db\strategy;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-class MySQLi implements \wf\db\DBInterface 
-{
-    use \wf\db\DBTrait;
-    
+class MySQLi extends \wf\db\DBAbstract
+{    
     /**
      * 数据库操作对象
      * 
@@ -38,13 +36,13 @@ class MySQLi implements \wf\db\DBInterface
     public function __construct(array $cfg)
     {
         if (!class_exists('\\mysqli')) {
-            throw new \wf\db\Exception('error on connect to database：你的PHP引擎未启用mysqli扩展。');
+            throw new \wf\db\Exception('error on connect to database：please install mysqli extension OR change to PDOMySQL extension.');
         }
     
         parent::__construct($cfg);
         
         if(!$this->mysqli = new \mysqli($cfg['host'], $cfg['user'], $cfg['pass'], $cfg['name'], $cfg['port'], @$cfg['db__socket'])) {
-            throw new \wf\db\Exception('error on connect to database：'.$this->mysqli->error);
+            throw new \wf\db\Exception('error on connect to database：'.$this->mysqli->connect_error);
         }
 
         $this->mysqli->set_charset("utf8");
@@ -188,7 +186,7 @@ class MySQLi implements \wf\db\DBInterface
      */
     public function getLastErr()
     {
-        return implode(' ', $this->mysqli->error_list);
+        return $this->mysqli->error;
     }
         
     /**

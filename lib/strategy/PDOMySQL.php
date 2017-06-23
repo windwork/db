@@ -18,10 +18,8 @@ namespace wf\db\strategy;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-class PDOMySQL implements \wf\db\DBInterface
+class PDOMySQL extends \wf\db\DBAbstract
 {
-    use \wf\db\DBTrait;
-    
     /**
      * 数据库操作对象
      * 
@@ -41,7 +39,7 @@ class PDOMySQL implements \wf\db\DBInterface
     
         parent::__construct($cfg);
         
-        try {        
+        try {
             $dsn = "mysql:host={$cfg['host']};port={$cfg['port']};dbname={$cfg['name']};charset=utf8";
             $this->dbh = new \PDO($dsn, $cfg['user'], $cfg['pass']);
         } catch (\PDOException $e) {

@@ -17,7 +17,7 @@ namespace wf\db;
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0
  */
-trait DBTrait 
+abstract class DBAbstract implements DBInterface
 {    
     /**
      * 数据库连接配置
