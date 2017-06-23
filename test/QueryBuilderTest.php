@@ -1,6 +1,6 @@
 <?php
 require_once '../lib/QueryBuilder.php';
-require_once '../lib/Find.php';
+require_once '../lib/Finder.php';
 
 use \wf\db\QueryBuilder;
 
@@ -317,7 +317,7 @@ class QueryBuilderTest extends PHPUnit_Framework_TestCase
         $exp = $this->stripSql($exp);
         $this->assertEquals($exp, $sql);
         
-        $finder = new \wf\db\Find();
+        $finder = new \wf\db\Finder();
         $finder->field('aa,bb,cc,count(id)')
         ->from('demo')
         ->where('is_checked', 1)

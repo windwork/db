@@ -9,7 +9,7 @@ namespace wf\db;
  * @link        http://docs.windwork.org/manual/wf.db.query.html
  * @since       0.1.0
  */
-class Find 
+class Finder
 {
     /**
      * 
@@ -42,7 +42,7 @@ class Find
     /**
      * 
      * @param \wf\db\DBInterface $db
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function setDb(\wf\db\DBInterface $db)
     {
@@ -148,7 +148,7 @@ class Find
     /**
      * 字段名列表，将被进行注入漏洞过滤，默认是 *，如：f.a, f.b
      * @param string $field
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function field($field = '*')
     {
@@ -160,7 +160,7 @@ class Find
     /**
      * 字段名列表，不进行漏洞过滤，设置后比field优先使用
      * @param string $fields
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function fieldRaw($fields = '*')
     {
@@ -173,7 +173,7 @@ class Find
      * 查询的表名
      * 可以是多个表，默认是当前模型的表，table_a, table_b AS b
      * @param string $table
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function from($table)
     {
@@ -191,7 +191,7 @@ class Find
      * @param string $onFieldA  ON 等号前面的字段名
      * @param string $onFieldB  ON 等号后面的字段名
      * @param string $joinType = 'LEFT' join类型，LEFT|RIGHT|INNER|CROSS
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function join($table, $onFieldA, $onFieldB, $joinType = 'LEFT')
     {
@@ -231,7 +231,7 @@ class Find
      *     ...
      *   ]
      * </pre>
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function whereMulti($where)
     {
@@ -248,7 +248,7 @@ class Find
      * @param mixed $value  字段值
      * @param string $operator = '=' 运算符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function where($field, $value, $operator = '=', $type = 'string')
     {
@@ -266,7 +266,7 @@ class Find
      * @param mixed $value  字段值
      * @param string $operator = '=' 运算符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function andWhere($field, $value, $operator = '=', $type = 'string')
     {
@@ -284,7 +284,7 @@ class Find
      * @param mixed $value  字段值
      * @param string $operator = '=' 运算符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function orWhere($field, $value, $operator = '=', $type = 'string')
     {
@@ -305,7 +305,7 @@ class Find
      * 对$order参数进行SQL注入过滤后，在前面加上ORDER BY
      * 
      * @param string $order
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function order($order)
     {
@@ -318,7 +318,7 @@ class Find
      * 对$group参数进行SQL注入过滤后，在前面加上GROUP BY
      * 
      * @param string $group
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function group($group)
     {
@@ -354,7 +354,7 @@ class Find
      *     ...
      *   ]
      * </pre>
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function havingMulti($having)
     {
@@ -371,7 +371,7 @@ class Find
      * @param mixed $value  字段值
      * @param string $operator = '=' 操作符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function having($field, $value, $operator = '=', $type = 'string')
     {
@@ -389,7 +389,7 @@ class Find
      * @param mixed $value  字段值
      * @param string $operator = '=' 运算符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function andHaving($field, $value, $operator = '=', $type = 'string')
     {
@@ -406,7 +406,7 @@ class Find
      * @param mixed $value  字段值
      * @param string $operator = '=' 运算符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
      * @param string $type = 'string' 字段值的类型，默认是string，string：字符串，field：字段，int：整形，float：浮点型，sql：sql语句
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function orHaving($field, $value, $operator = '=', $type = 'string')
     {
@@ -427,7 +427,7 @@ class Find
      * SQL分页查询
      * @param number $offset
      * @param number $rows
-     * @return \wf\db\Find
+     * @return \wf\db\Finder
      */
     public function limit($offset, $rows = 0)
     {

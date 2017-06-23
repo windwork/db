@@ -1,21 +1,21 @@
 <?php
 require_once '../lib/QueryBuilder.php';
 require_once '../lib/Exception.php';
-require_once '../lib/Find.php';
+require_once '../lib/Finder.php';
 
 use \wf\db\QueryBuilder;
-use \wf\db\Find;
+use \wf\db\Finder;
 use \wf\db\Exception;
 
 /**
- * Find test case.
+ * Finder test case.
  */
-class FindTest extends PHPUnit_Framework_TestCase 
+class FinderTest extends PHPUnit_Framework_TestCase
 {
     
     /**
      *
-     * @var Find
+     * @var \wf\db\Finder
      */
     private $find;
     
@@ -28,7 +28,7 @@ class FindTest extends PHPUnit_Framework_TestCase
         
         // TODO Auto-generated FindTest::setUp()
         
-        $this->find = new Find();
+        $this->find = new Finder();
     }
     
     /**
@@ -36,7 +36,7 @@ class FindTest extends PHPUnit_Framework_TestCase
      */
     protected function tearDown() 
     {
-        // TODO Auto-generated FindTest::tearDown()
+        // TODO Auto-generated FinderTest::tearDown()
         $this->find = null;
         
         parent::tearDown ();
@@ -51,11 +51,11 @@ class FindTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests Find->getOptions()
+     * Tests Finder->getOptions()
      */
     public function testGetOptions() 
     {
-        $finder = new \wf\db\Find();
+        $finder = new \wf\db\Finder();
         $sql = $finder
         ->from('my_table tbl')
         ->field('a,b,c')
@@ -85,7 +85,7 @@ class FindTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests Find->field()
+     * Tests Finder->field()
      */
     public function testField() 
     {
@@ -95,7 +95,7 @@ class FindTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests Find->fieldRaw()
+     * Tests Finder->fieldRaw()
      */
     public function testFieldsRaw() 
     {
@@ -105,7 +105,7 @@ class FindTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests Find->from()
+     * Tests Finder->from()
      */
     public function testFrom() 
     {
@@ -115,7 +115,7 @@ class FindTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests Find->join()
+     * Tests Finder->join()
      */
     public function testJoin() 
     {        
@@ -133,7 +133,7 @@ class FindTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests Find->where()
+     * Tests Finder->where()
      */
     public function testWhere() 
     {
@@ -166,7 +166,7 @@ class FindTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests Find->group()
+     * Tests Finder->group()
      */
     public function testGroup() 
     {
@@ -176,7 +176,7 @@ class FindTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests Find->having()
+     * Tests Finder->having()
      */
     public function testHaving() 
     {
