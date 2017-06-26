@@ -4,6 +4,13 @@ Windwork MySQL数据库访问组件
 
 ## 数据库读写
 
+### 数据库实例创建
+```
+// 在config/app.php设置数据库参数
+// 获取数据库操作实例
+$db = wfDb();
+```
+
 数据库操作对象可执行如下方法进行数据库读写：
 
 ```    
@@ -127,7 +134,7 @@ $db->getAll($sql, $arg);
 
 try {
     // 开启事务
-    $trans = db()->beginTransaction();
+    $trans = wfDb()->beginTransaction();
 
     // 数据库写入业务代码
     // ……

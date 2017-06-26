@@ -28,6 +28,8 @@ class PDOMySQL extends \wf\db\DBAbstract
     private $dbh = null;
     
     /**
+     * 数据库连接
+     *
      * @param array $cfg
      * @throws \wf\db\Exception
      */
@@ -51,7 +53,6 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::beginTransaction()
      */
@@ -66,7 +67,6 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::commit()
      */
@@ -80,7 +80,6 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::lastInsertId()
      */
@@ -91,7 +90,6 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::query()
      */
@@ -116,7 +114,6 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::exec()
      */
@@ -143,7 +140,6 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::getAll()
      */
@@ -159,7 +155,6 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::getRow()
      */
@@ -175,7 +170,6 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::getColumn()
      */
@@ -192,7 +186,6 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::getLastErr()
      */
@@ -202,7 +195,6 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
         
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::setAutoCommit()
      */
@@ -214,11 +206,10 @@ class PDOMySQL extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
-     * @see \wf\db\DBInterface::rollBack()
+     * @see \wf\db\DBInterface::rollback()
      */
-    public function rollBack()
+    public function rollback()
     {
         --$this->transactions;
         

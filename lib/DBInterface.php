@@ -55,15 +55,15 @@ interface DBInterface
      * 默认没有启用自动提交，需要调用DBAbstract::commit()提交
      * 
      * <code>
-     * useage:
+     * usage:
      *   try{
-     *       db()->beginTransaction();
-     *       $q1 = db()->query($sql);
-     *       $q2 = db()->query($sql);
-     *       $q3 = db()->query($sql);
-     *       db()->commit();
+     *       $trans = wfDb()->beginTransaction();
+     *       $q1 = wfDb()->query($sql);
+     *       $q2 = wfDb()->query($sql);
+     *       $q3 = wfDb()->query($sql);
+     *       $trans->commit();
      *   } catch(\wf\db\Exception $e) {
-     *       db()->rollBack();
+     *       $trans->rollback();
      *   }
      * </code>
      * @return \wf\db\DBInterface
@@ -113,7 +113,7 @@ interface DBInterface
      * 
      * @return bool
      */
-    public function rollBack();
+    public function rollback();
     
     /**
      * 设置是否自动提交事务，启用事务的时候有效

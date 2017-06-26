@@ -76,6 +76,7 @@ class QueryBuilder
 
     /**
      * 字段转义
+     * 
      * @param string $field
      * @return string
      */
@@ -99,7 +100,9 @@ class QueryBuilder
     }
     
     /**
-     * 字段名转义，可以是多个字段一起，如：table.field1 或 a.f1, b.f2, c.*
+     * 字段名转义
+     * 
+     * 可以是多个字段一起，如：table.field1 或 a.f1, b.f2, c.*
      * 
      * @param string|array $fields 
      * @return string
@@ -150,6 +153,8 @@ class QueryBuilder
     }
     
     /**
+     * 排序参数过滤
+     * 
      * @param string $str
      * @return string
      * @throws \wf\db\Exception
@@ -326,6 +331,7 @@ class QueryBuilder
      * sql格式化
      * 
      * 在$sql参数中加入"%参数类型字符"的格式，并在$arg参数设置该格式的值，$sql中的第n个参数对应$arg中的第n个元素。
+     * 
      * <pre>
      * $exp = "SELECT `uid`,`uname`,`password` FROM `user` WHERE `uid` = 100 AND `checked` = 1";
      * $sql = "SELECT %c FROM %t WHERE %c = %i AND `checked` = %i";
@@ -417,6 +423,7 @@ class QueryBuilder
      *     'having' => '', // 数组结构，格式同where，将对其进行SQL注入过滤并且在前面加上 HAVING
      *     'order'  => '', // 将对其进行SQL注入过滤并且在前面加上 ORDER BY
      * )</pre>
+     * 
      * @see \wf\db\DBInterface::whereArr()
      * @throws \wf\db\Exception
      * @return array

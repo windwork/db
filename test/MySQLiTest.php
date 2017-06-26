@@ -184,7 +184,7 @@ class MySQLTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests mySQLi->rollBack()
+     * Tests mySQLi->rollback()
      */
     public function testRollBack() 
     {
@@ -197,7 +197,7 @@ class MySQLTest extends PHPUnit_Framework_TestCase
             $this->insertRow();
             throw new \wf\db\Exception('~');
         } catch (\wf\db\Exception $e) {
-            $this->mySQLi->rollBack();
+            $this->mySQLi->rollback();
         }
         
         $lastStr = $this->mySQLi->getColumn("SELECT str FROM wk_test_table ORDER BY id DESC");

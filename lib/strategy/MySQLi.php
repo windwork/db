@@ -116,12 +116,8 @@ class MySQLi extends \wf\db\DBAbstract
     }
     
     /**
-     * 执行SQL，针对没有结果集合返回的操作，比如INSERT、UPDATE、DELETE等写入操作，它返回的结果是当前操作影响的列数。
-     * 
-     * @param string $sql
-     * @param array $args
-     * @throws \wf\db\Exception
-     * @return bool 
+     * {@inheritDoc}
+     * @see \wf\db\DBInterface::exec()
      */
     public function exec($sql, array $args = [])
     {
@@ -180,7 +176,6 @@ class MySQLi extends \wf\db\DBAbstract
     }
     
     /**
-     * 
      * {@inheritDoc}
      * @see \wf\db\DBInterface::getLastErr()
      */
@@ -190,9 +185,8 @@ class MySQLi extends \wf\db\DBAbstract
     }
         
     /**
-     * 设置是否自动提交事务，启用事务的时候有效
-     * 
-     * @return \wf\db\DBInterface
+     * {@inheritDoc}
+     * @see \wf\db\DBInterface::setAutoCommit()
      */
     public function setAutoCommit($isAutoCommit = false)
     {
@@ -201,7 +195,11 @@ class MySQLi extends \wf\db\DBAbstract
         return $this;
     }
     
-    public function rollBack()
+    /**
+     * {@inheritDoc}
+     * @see \wf\db\DBInterface::rollback()
+     */
+    public function rollback()
     {
         --$this->transactions;
             

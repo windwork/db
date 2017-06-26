@@ -12,13 +12,13 @@ namespace wf\db;
 class Finder
 {
     /**
-     * 
+     * 数据库操作实例
      * @var \wf\db\DBInterface
      */
     protected $db;
     
     /**
-     * 
+     * 配置参数
      * @var array
      */
     protected $options = [
@@ -34,12 +34,17 @@ class Finder
         // union 很少使用不支持，如需要直接写SQL
     ];
     
+    /**
+     * 通过构造函数设置数据库参数
+     * @param array $options = []
+     */
     public function __construct(array $options = [])
     {
         $this->options = $options;
     }
     
     /**
+     * 设置数据库操作实例
      * 
      * @param \wf\db\DBInterface $db
      * @return \wf\db\Finder
@@ -54,7 +59,7 @@ class Finder
      * 
      * @return \wf\db\DBInterface
      */
-    public function db()
+    public function getDb()
     {
         return $this->db;
     }
@@ -76,7 +81,7 @@ class Finder
         }
         
         $sql = QueryBuilder::optionsToSql($opts);
-        $all = $this->db()->getAll($sql);
+        $all = $this->getDb()->getAll($sql);
         
         return $all;
     }
@@ -92,15 +97,15 @@ class Finder
         $opts['limit'] = 1;
         
         $sql = QueryBuilder::optionsToSql($opts);
-        $row = $this->db()->getRow($sql);
+        $row = $this->getDb()->getRow($sql);
         
         return $row;        
     }
     
     /**
      * 获取字段值
-     * @param string $field
-     * @return scalar
+     * @param string $field = ''
+     * @return string
      */
     public function fetchColumn($field = '')
     {
@@ -111,14 +116,14 @@ class Finder
         }
         
         $sql = QueryBuilder::optionsToSql($opts);        
-        $colValue = $this->db()->getColumn($sql);
+        $colValue = $this->getDb()->getColumn($sql);
         
         return $colValue;
     }
     
     /**
      * 获取记录数
-     * @param string $field
+     * @param string $field = ''
      * @return int
      */
     public function fetchCount($field = '')
@@ -130,7 +135,7 @@ class Finder
         }
         
         $sql = \wf\db\QueryBuilder::optionsToCountSql($opts);
-        $num = $this->db()->getColumn($sql);
+        $num = $this->getDb()->getColumn($sql);
         
         return $num;
         
@@ -146,8 +151,11 @@ class Finder
     }
     
     /**
-     * 字段名列表，将被进行注入漏洞过滤，默认是 *，如：f.a, f.b
-     * @param string $field
+     * 字段名列表
+     * 
+     * 将被进行注入漏洞过滤，默认是 *，如：f.a, f.b
+     * 
+     * @param string $field = '*'
      * @return \wf\db\Finder
      */
     public function field($field = '*')
@@ -158,8 +166,11 @@ class Finder
     }
     
     /**
-     * 字段名列表，不进行漏洞过滤，设置后比field优先使用
-     * @param string $fields
+     * 字段名列表
+     * 
+     * 不进行漏洞过滤，设置后比field优先使用
+     * 
+     * @param string $fields = '*'
      * @return \wf\db\Finder
      */
     public function fieldRaw($fields = '*')
@@ -171,7 +182,9 @@ class Finder
     
     /**
      * 查询的表名
+     * 
      * 可以是多个表，默认是当前模型的表，table_a, table_b AS b
+     * 
      * @param string $table
      * @return \wf\db\Finder
      */
@@ -243,7 +256,7 @@ class Finder
     /**
      * WHERE查询条件
      * 
-     * 如需要复杂SQL查询，请使用 db()->getAll($sql, $args)/db()->getRow($sql, $args)/db()->getColumn($sql, $args)
+     * 如需要复杂SQL查询，请使用 wfDb()->getAll($sql, $args)/wfDb()->getRow($sql, $args)/wfDb()->getColumn($sql, $args)
      * @param string $field 字段名
      * @param mixed $value  字段值
      * @param string $operator = '=' 运算符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
@@ -261,7 +274,8 @@ class Finder
     /**
      * WHERE查询条件（AND）
      *
-     * 如需要复杂SQL查询，请使用 db()->getAll($sql, $args)/db()->getRow($sql, $args)/db()->getColumn($sql, $args)
+     * 如需要复杂SQL查询，请使用 wfDb()->getAll($sql, $args)/wfDb()->getRow($sql, $args)/wfDb()->getColumn($sql, $args)
+     * 
      * @param string $field 字段名
      * @param mixed $value  字段值
      * @param string $operator = '=' 运算符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
@@ -279,7 +293,8 @@ class Finder
     /**
      * WHERE查询条件（OR）
      *
-     * 如需要复杂SQL查询，请使用 db()->getAll($sql, $args)/db()->getRow($sql, $args)/db()->getColumn($sql, $args)
+     * 如需要复杂SQL查询，请使用 wfDb()->getAll($sql, $args)/wfDb()->getRow($sql, $args)/wfDb()->getColumn($sql, $args)
+     * 
      * @param string $field 字段名
      * @param mixed $value  字段值
      * @param string $operator = '=' 运算符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
@@ -302,6 +317,8 @@ class Finder
     }
     
     /**
+     * 查询参数设置
+     * 
      * 对$order参数进行SQL注入过滤后，在前面加上ORDER BY
      * 
      * @param string $order
@@ -315,6 +332,8 @@ class Finder
     }
     
     /**
+     * group查询设置
+     * 
      * 对$group参数进行SQL注入过滤后，在前面加上GROUP BY
      * 
      * @param string $group
@@ -366,7 +385,8 @@ class Finder
     /**
      * HAVING条件，格式同where
      * 
-     * 如需要复杂SQL查询，请使用 db()->getAll($sql, $args)/db()->getRow($sql, $args)/db()->getColumn($sql, $args)
+     * 如需要复杂SQL查询，请使用 wfDb()->getAll($sql, $args)/wfDb()->getRow($sql, $args)/wfDb()->getColumn($sql, $args)
+     * 
      * @param string $field 字段名
      * @param mixed $value  字段值
      * @param string $operator = '=' 操作符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
@@ -384,7 +404,8 @@ class Finder
     /**
      * HAVING查询条件（AND）
      *
-     * 如需要复杂SQL查询，请使用 db()->getAll($sql, $args)/db()->getRow($sql, $args)/db()->getColumn($sql, $args)
+     * 如需要复杂SQL查询，请使用 wfDb()->getAll($sql, $args)/wfDb()->getRow($sql, $args)/wfDb()->getColumn($sql, $args)
+     * 
      * @param string $field 字段名
      * @param mixed $value  字段值
      * @param string $operator = '=' 运算符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
@@ -401,7 +422,8 @@ class Finder
     /**
      * HAVING查询条件（OR）
      *
-     * 如需要复杂SQL查询，请使用 db()->getAll($sql, $args)/db()->getRow($sql, $args)/db()->getColumn($sql, $args)
+     * 如需要复杂SQL查询，请使用 wfDb()->getAll($sql, $args)/wfDb()->getRow($sql, $args)/wfDb()->getColumn($sql, $args)
+     * 
      * @param string $field 字段名
      * @param mixed $value  字段值
      * @param string $operator = '=' 运算符，可选=,+,-,|,&,^,like,in,notin,>,<,<>,>=,<=,!=等
@@ -425,6 +447,7 @@ class Finder
     
     /**
      * SQL分页查询
+     * 
      * @param number $offset
      * @param number $rows
      * @return \wf\db\Finder
@@ -441,6 +464,7 @@ class Finder
     
     /**
      * 将查询选项转成SQL语句
+     * 
      * @return string
      */
     public function asSql()

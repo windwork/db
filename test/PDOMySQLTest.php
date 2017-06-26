@@ -189,7 +189,7 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
     }
     
     /**
-     * Tests PDOMySQL->rollBack()
+     * Tests PDOMySQL->rollback()
      */
     public function testRollBack()
     {
@@ -202,7 +202,7 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
             $this->insertRow();
             throw new \wf\db\Exception('~');
         } catch (\wf\db\Exception $e) {
-            $this->pDOMySQL->rollBack();
+            $this->pDOMySQL->rollback();
         }
         
         $lastStr = $this->pDOMySQL->getColumn("SELECT str FROM wk_test_table ORDER BY id DESC");
