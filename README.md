@@ -147,7 +147,48 @@ try {
 }
 
 ```
+<a name="config"></a>
+## 数据库连接配置参数
+
+```
+// config/db.php
+return [
+    // 主数据库
+    'default' => [
+        'class'          => '\\wf\\db\\strategy\\PDOMySQL',    // MySQLi/PDOMySQL
+        'host'           => '127.0.0.1',   // 本机测试
+        'port'           => '3306',        // 数据库服务器端口
+        'name'           => 'windworkdb',  // 数据库名
+        'user'           => 'root',        // 数据库连接用户名
+        'pass'           => '123456',      // 数据库连接密码
+        'tablePrefix'    => 'wk_',         // 表前缀
+        'debug'          => 0,
+    ],
+    
+    // 主从分离，启用后，从slave读，从default写
+    /*
+    'slave' => array(
+        // 数据库设置
+        'class'          => '\\wf\\db\\strategy\\PDOMySQL',
+        'host'           => '127.0.0.1',   // 本机测试
+        'port'           => '3306',        // 数据库服务器端口
+        'name'           => 'windworkdb',  // 数据库名
+        'user'           => 'root',        // 数据库连接用户名
+        'pass'           => '123456',      // 数据库连接密码
+        'tablePrefix'    => 'wk_',         // 表前缀
+        'debug'          => 0,
+    ),
+    */
+];
+```
 
 ## TODO
 - 完善使用文档
 - 改进文档注释
+
+
+<br />
+<br />
+> ### 要了解更多？
+> - [官方完整文档首页](http://docs.windwork.org/manual/)
+> - [官方源码首页](https://github.com/windwork

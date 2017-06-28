@@ -10,7 +10,7 @@
 namespace wf\db;
 
 /**
- * SQL语句构造类
+ * SQL语句构造器
  *
  * @package     wf.db
  * @author      cm <cmpan@qq.com>
