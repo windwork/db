@@ -7,13 +7,13 @@
  * @copyright Copyright (c) 2008-2017 Windwork Team. (http://www.windwork.org)
  * @license   http://opensource.org/licenses/MIT
  */
-namespace wf\db\strategy;
+namespace wf\db\adapter;
 
 /**
  * 使用 PDO扩展对MySQL数据库进行操作
  * 如果是自己写sql语句的时候，请不要忘了防注入，只是在您不输入sql的情况下帮您过滤MySQL注入了
  *
- * @package     wf.db.strategy
+ * @package     wf.db.adapter
  * @author      cm <cmpan@qq.com>
  * @link        http://docs.windwork.org/manual/wf.db.html
  * @since       0.1.0

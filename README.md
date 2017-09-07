@@ -95,7 +95,7 @@ $dbCfgs = [
     'debug'          => 0,
     'class'          => 'PDOMySQL',    // MySQLi|PDOMySQL
 ];
-$class = "\\wf\\db\\strategy\\{$dbCfg['class']}";
+$class = "\\wf\\db\\adapter\\{$dbCfg['class']}";
 $db = new $class($dbCfgs);
 
 // 获取所有记录
@@ -167,7 +167,7 @@ try {
 return [
     // 主数据库
     'default' => [
-        'class'          => '\\wf\\db\\strategy\\PDOMySQL',    // MySQLi/PDOMySQL
+        'class'          => '\\wf\\db\\adapter\\PDOMySQL',    // MySQLi/PDOMySQL
         'host'           => '127.0.0.1',   // 本机测试
         'port'           => '3306',        // 数据库服务器端口
         'name'           => 'windworkdb',  // 数据库名
@@ -181,7 +181,7 @@ return [
     /*
     'slave' => array(
         // 数据库设置
-        'class'          => '\\wf\\db\\strategy\\PDOMySQL',
+        'class'          => '\\wf\\db\\adapter\\PDOMySQL',
         'host'           => '127.0.0.1',   // 本机测试
         'port'           => '3306',        // 数据库服务器端口
         'name'           => 'windworkdb',  // 数据库名

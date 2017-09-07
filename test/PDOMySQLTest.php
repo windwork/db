@@ -7,9 +7,9 @@ require_once __DIR__ . '/../lib/DBInterface.php';
 require_once __DIR__ . '/../lib/DBAbstract.php';
 require_once __DIR__ . '/../lib/Exception.php';
 require_once __DIR__ . '/../lib/QueryBuilder.php';
-require_once __DIR__ . '/../lib/strategy/PDOMySQL.php';
+require_once __DIR__ . '/../lib/adapter/PDOMySQL.php';
 
-use \wf\db\strategy\PDOMySQL;
+use \wf\db\adapter\PDOMySQL;
 
 /**
  * PDOMySQL test case.
@@ -32,7 +32,7 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
         $cfg = array(
             // 
             'default' => array(
-                'class'         => '\\wf\\db\\strategy\\PDOMySQL',    // MySQLi|PDOMySQL
+                'class'         => '\\wf\\db\\adapter\\PDOMySQL',    // MySQLi|PDOMySQL
                 'host'          => '127.0.0.1',  // 本机测试
                 'port'          => '3306',       // 数据库服务器端口
                 'name'          => 'test',       // 数据库名
@@ -43,7 +43,7 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
             ),
             // 可主从分离
             'slave' => array(
-                'class'         => '\\wf\\db\\strategy\\PDOMySQL',    // MySQLi|PDOMySQL
+                'class'         => '\\wf\\db\\adapter\\PDOMySQL',    // MySQLi|PDOMySQL
                 'host'          => '127.0.0.1',  // 本机测试
                 'port'          => '3306',       //=>
                 'name'          => 'test',       // 数据库名
