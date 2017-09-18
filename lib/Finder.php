@@ -74,10 +74,16 @@ class Finder
     public function fetchAll($offset = 0, $rows = 0)
     {        
         $opts = $this->options;
-        if ($offset && $rows) {
+        if ($offset || $rows) {
             $offset = (int)$offset;
-            $rows = (int)$rows;            
-            $opts['limit'] = "{$offset},{$rows}";
+            $rows = (int)$rows;
+            if ($rows) {
+                $opts['limit'] = "{$offset},{$rows}";
+            } else {
+                $opts['limit'] = "{$offset}";
+            }
+        } else {
+            throw new Exception('param error, one of the params must be greater than 0');
         }
         
         $sql = QueryBuilder::optionsToSql($opts);
