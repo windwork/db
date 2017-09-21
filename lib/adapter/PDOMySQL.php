@@ -72,10 +72,18 @@ class PDOMySQL extends \wf\db\DBAbstract
      */
     public function commit()
     {
+        if ($this->rollbackAgain) {
+            throw new \wf\db\Exception('Please throw exception after rollback in last catch block');
+        }
+
         --$this->transactions;
     
         if($this->transactions == 0 && false === $this->dbh->commit()) {
             throw new \wf\db\Exception('transaction commit error: ' . $this->getLastErr());
+        }
+
+        if ($this->transactions < 0) {
+            $this->transactions = 0;
         }
     }
     
@@ -211,9 +219,16 @@ class PDOMySQL extends \wf\db\DBAbstract
      */
     public function rollback()
     {
-        --$this->transactions;
-        
-        if ($this->transactions <= 0 && false === $this->dbh->rollback()) {
+        // 事务链中一旦出现异常，为避免事务链中异常后面的SQL还执行，应返回到第一个事务再回滚
+        if ($this->transactions -- > 1) {
+            $this->rollbackAgain = true;
+            return;
+        }
+
+        $this->rollbackAgain = false;
+
+        // 出现异常立即回滚，回滚后再出现commit则应该抛出异常
+        if (false === $this->dbh->rollback()) {
             throw new \wf\db\Exception('transaction rollback error: ' . $this->getLastErr());
         }
     }

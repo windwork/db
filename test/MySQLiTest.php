@@ -14,7 +14,7 @@ use wf\db\QueryBuilder;
 /**
  * PDOMySQL test case.
  */
-class MySQLTest extends PHPUnit_Framework_TestCase 
+class MySQLiTest extends PHPUnit_Framework_TestCase
 {
     /**
      * 
@@ -202,6 +202,74 @@ class MySQLTest extends PHPUnit_Framework_TestCase
         
         $lastStr = $this->mySQLi->getColumn("SELECT str FROM wk_test_table ORDER BY id DESC");
         $this->assertEquals($uniqe, $lastStr);
+    }
+
+
+    /**
+     * 测试嵌套事务
+     */
+    public function testNestedTrans()
+    {
+        $uniqe = uniqid();
+        $this->insertRow($uniqe);
+
+        try {
+            $trans = $this->mySQLi->beginTransaction();
+            $this->insertRow();
+            $this->insertRow();
+
+            try {
+                $trans = $this->mySQLi->beginTransaction();
+                $this->insertRow();
+                $this->insertRow();
+                $trans->commit();
+            } catch (\wf\db\Exception $e) {
+                $trans->rollback();
+            }
+
+            try {
+                $trans = $this->mySQLi->beginTransaction();
+                $this->insertRow();
+                $this->insertRow();
+
+                try {
+                    $trans = $this->mySQLi->beginTransaction();
+                    $this->insertRow();
+                    $this->insertRow();
+
+                    // 在此出现异常
+                    throw new \wf\db\Exception('~');
+
+                    $trans->commit();
+                } catch (\wf\db\Exception $e) {
+                    $trans->rollback();
+                }
+
+                // 应避免：事务因异常关闭，因上面回滚后没有再抛出异常，导致继续执行这里
+                $this->insertRow();
+
+                $trans->commit();
+            } catch (\wf\db\Exception $e) {
+                $trans->rollback();
+            }
+
+            $trans->commit();
+        } catch (\wf\db\Exception $e) {
+            $trans->rollback();
+        }
+
+        // 检测事务没有添加成功（最后添加的是事务开启前的）
+        $lastStr = $this->mySQLi->getColumn("SELECT str FROM wk_test_table ORDER BY id DESC");
+        $this->assertEquals($uniqe, $lastStr);
+
+
+        // 检查事务已正常关闭
+        $uniqe = uniqid();
+        $this->insertRow($uniqe);
+        $lastStr = $this->mySQLi->getColumn("SELECT str FROM wk_test_table ORDER BY id DESC");
+        $this->assertEquals($uniqe, $lastStr);
+
+        print 'testNestedTrans done';
     }
 }
 

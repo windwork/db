@@ -14,48 +14,48 @@ use \wf\db\adapter\PDOMySQL;
 /**
  * PDOMySQL test case.
  */
-class PDOMySQLTest extends PHPUnit_Framework_TestCase 
+class PDOMySQLTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * 
+     *
      * @var \wf\db\DBInterface
      */
     private $pDOMySQL;
-    
+
     /**
      * Prepares the environment before running a test.
      */
-    protected function setUp() 
+    protected function setUp()
     {
-        parent::setUp ();
-        
+        parent::setUp();
+
         $cfg = array(
             // 
             'default' => array(
-                'class'         => '\\wf\\db\\adapter\\PDOMySQL',    // MySQLi|PDOMySQL
-                'host'          => '127.0.0.1',  // 本机测试
-                'port'          => '3306',       // 数据库服务器端口
-                'name'          => 'test',       // 数据库名
-                'user'          => 'root',       // 数据库连接用户名
-                'pass'          => '123456',     // 数据库连接密码
-                'tablePrefix'   => 'wk_',        // 表前缀
-                'debug'         => 1,
+                'class' => '\\wf\\db\\adapter\\PDOMySQL',    // MySQLi|PDOMySQL
+                'host' => '127.0.0.1',  // 本机测试
+                'port' => '3306',       // 数据库服务器端口
+                'name' => 'test',       // 数据库名
+                'user' => 'root',       // 数据库连接用户名
+                'pass' => '123456',     // 数据库连接密码
+                'tablePrefix' => 'wk_',        // 表前缀
+                'debug' => 1,
             ),
             // 可主从分离
             'slave' => array(
-                'class'         => '\\wf\\db\\adapter\\PDOMySQL',    // MySQLi|PDOMySQL
-                'host'          => '127.0.0.1',  // 本机测试
-                'port'          => '3306',       //=>
-                'name'          => 'test',       // 数据库名
-                'user'          => 'root',       // 数据库连接用户名
-                'pass'          => '123456',     // 数据库连接密码
-                'tablePrefix'   => 'wk_',        // 表前缀
-                'debug'         => 1,
+                'class' => '\\wf\\db\\adapter\\PDOMySQL',    // MySQLi|PDOMySQL
+                'host' => '127.0.0.1',  // 本机测试
+                'port' => '3306',       //=>
+                'name' => 'test',       // 数据库名
+                'user' => 'root',       // 数据库连接用户名
+                'pass' => '123456',     // 数据库连接密码
+                'tablePrefix' => 'wk_',        // 表前缀
+                'debug' => 1,
             ),
         );
 
         $this->pDOMySQL = new $cfg['default']['class']($cfg['default']);
-        
+
         // 创建测试表
         $sql = "CREATE TABLE IF NOT EXISTS `wk_test_table` (
                   `id`  int(10) UNSIGNED NOT NULL AUTO_INCREMENT ,
@@ -63,36 +63,36 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
                   PRIMARY KEY (`id`)
                 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;";
         $this->pDOMySQL->query($sql);
-        
+
         $tableInfo = $this->pDOMySQL->getTableSchema('wk_test_table');
         print_r($tableInfo);
     }
-    
+
     /**
      * Cleans up the environment after running a test.
      */
-    protected function tearDown() 
+    protected function tearDown()
     {
-        parent::tearDown ();
+        parent::tearDown();
         $sql = "DROP TABLE IF EXISTS wk_test_table";
         $this->pDOMySQL->query($sql);
     }
-    
+
     /**
      * Constructs the test case.
      */
-    public function __construct() 
+    public function __construct()
     {
-        
+
     }
-    
-    private function insertRow($val = '') 
+
+    private function insertRow($val = '')
     {
         $val = $val ? $val : date('Y-m-d H:i:s');
         $sql = "INSERT INTO wk_test_table (str) VALUE ('{$val}')";
         $this->pDOMySQL->query($sql);
     }
-    
+
     /**
      * Tests PDOMySQL->lastInsertId()
      */
@@ -100,44 +100,44 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
     {
         $this->insertRow();
         $lastInsertId = $this->pDOMySQL->lastInsertId();
-        
+
         $this->assertNotEmpty($lastInsertId);
     }
-    
+
     /**
      * Tests PDOMySQL->query()
      */
     public function testQuery()
     {
         // TODO Auto-generated PDOMySQLTest->testQuery()
-        $this->markTestIncomplete ( "query test not implemented" );
-        
+        $this->markTestIncomplete("query test not implemented");
+
         $this->pDOMySQL->query(/* parameters */);
     }
-    
+
     /**
      * Tests PDOMySQL->exec()
      */
-    public function testExec() 
+    public function testExec()
     {
         // TODO Auto-generated PDOMySQLTest->testExec()
-        $this->markTestIncomplete ( "exec test not implemented" );
-        
+        $this->markTestIncomplete("exec test not implemented");
+
         $this->pDOMySQL->exec(/* parameters */);
     }
-    
+
     /**
      * Tests PDOMySQL->getAll()
      */
-    public function testGetAll() 
+    public function testGetAll()
     {
         $this->insertRow();
         $this->insertRow();
         $rows = $this->pDOMySQL->getAll("SELECT * FROM wk_test_table LIMIT 2");
-        
+
         $this->assertEquals(2, count($rows));
     }
-    
+
     /**
      * Tests PDOMySQL->getRow()
      */
@@ -145,27 +145,27 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
     {
         $uniqe = uniqid();
         $this->insertRow($uniqe);
-        
+
         $row = $this->pDOMySQL->getRow("SELECT * FROM wk_test_table WHERE str = '{$uniqe}'");
         $this->assertNotEmpty($row);
     }
-    
+
     /**
      * Tests PDOMySQL->getColumn()
      */
-    public function testGetColumn() 
+    public function testGetColumn()
     {
         $uniqe = uniqid();
         $this->insertRow($uniqe);
-        
+
         $str = $this->pDOMySQL->getRow("SELECT str FROM wk_test_table WHERE str = '{$uniqe}'");
         $this->assertNotEmpty($str);
     }
-    
+
     /**
      * Tests PDOMySQL->getLastErr()
      */
-    public function testGetLastErr() 
+    public function testGetLastErr()
     {
         $sql = "SELECT x from tb_" . uniqid();
         try {
@@ -176,18 +176,18 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
         $msg = $e->getMessage();
         $this->assertEquals($lastErr, $msg);
     }
-    
+
     /**
      * Tests PDOMySQL->setAutoCommit()
      */
     public function testSetAutoCommit()
     {
         // TODO Auto-generated PDOMySQLTest->testSetAutoCommit()
-        $this->markTestIncomplete ( "setAutoCommit test not implemented" );
-        
+        $this->markTestIncomplete("setAutoCommit test not implemented");
+
         $this->pDOMySQL->setAutoCommit(/* parameters */);
     }
-    
+
     /**
      * Tests PDOMySQL->rollback()
      */
@@ -195,7 +195,7 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
     {
         $uniqe = uniqid();
         $this->insertRow($uniqe);
-        
+
         try {
             $this->pDOMySQL->beginTransaction();
             $this->insertRow();
@@ -204,7 +204,72 @@ class PDOMySQLTest extends PHPUnit_Framework_TestCase
         } catch (\wf\db\Exception $e) {
             $this->pDOMySQL->rollback();
         }
-        
+
+        $lastStr = $this->pDOMySQL->getColumn("SELECT str FROM wk_test_table ORDER BY id DESC");
+        $this->assertEquals($uniqe, $lastStr);
+    }
+
+    /**
+     * 测试嵌套事务
+     */
+    public function testNestedTrans()
+    {
+        $uniqe = uniqid();
+        $this->insertRow($uniqe);
+
+        try {
+            $trans = $this->pDOMySQL->beginTransaction();
+            $this->insertRow();
+            $this->insertRow();
+
+            try {
+                $trans = $this->pDOMySQL->beginTransaction();
+                $this->insertRow();
+                $this->insertRow();
+                $trans->commit();
+            } catch (\wf\db\Exception $e) {
+                $trans->rollback();
+            }
+
+            try {
+                $trans = $this->pDOMySQL->beginTransaction();
+                $this->insertRow();
+                $this->insertRow();
+
+                try {
+                    $trans = $this->pDOMySQL->beginTransaction();
+                    $this->insertRow();
+                    $this->insertRow();
+
+                    // 在此出现异常
+                    throw new \wf\db\Exception('~');
+
+                    $trans->commit();
+                } catch (\wf\db\Exception $e) {
+                    $trans->rollback();
+                }
+
+                // 应避免：事务因异常关闭，因上面回滚后没有再抛出异常，导致继续执行这里
+                $this->insertRow();
+
+                $trans->commit();
+            } catch (\wf\db\Exception $e) {
+                $trans->rollback();
+            }
+
+            $trans->commit();
+        } catch (\wf\db\Exception $e) {
+            $trans->rollback();
+        }
+
+        // 检测事务没有添加成功（最后添加的是事务开启前的）
+        $lastStr = $this->pDOMySQL->getColumn("SELECT str FROM wk_test_table ORDER BY id DESC");
+        $this->assertEquals($uniqe, $lastStr);
+
+
+        // 检查事务已正常关闭
+        $uniqe = uniqid();
+        $this->insertRow($uniqe);
         $lastStr = $this->pDOMySQL->getColumn("SELECT str FROM wk_test_table ORDER BY id DESC");
         $this->assertEquals($uniqe, $lastStr);
     }

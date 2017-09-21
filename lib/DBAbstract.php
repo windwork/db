@@ -30,6 +30,13 @@ abstract class DBAbstract implements DBInterface
      * @var int
      */
     protected $transactions = 0;
+
+    /**
+     * 事务链中还应继续执行回滚
+     * 在嵌套事务中，开启多少次事务就应该执行多少次回滚
+     * @var int
+     */
+    protected $rollbackAgain = false;
     
     /**
      * 记录当前请求执行的SQL查询语句

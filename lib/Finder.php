@@ -82,8 +82,6 @@ class Finder
             } else {
                 $opts['limit'] = "{$offset}";
             }
-        } else {
-            throw new Exception('param error, one of the params must be greater than 0');
         }
         
         $sql = QueryBuilder::optionsToSql($opts);
