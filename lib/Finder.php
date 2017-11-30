@@ -136,6 +136,8 @@ class Finder
         
         if ($field) {
             $opts['field'] = $field;
+        } else {
+            $opts['field'] = '*';
         }
         
         $sql = \wf\db\QueryBuilder::optionsToCountSql($opts);
